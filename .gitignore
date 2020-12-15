@@ -1,4 +1,5 @@
 .idea
 venv
+__pycache__
 123.png
 Схема для User.png
