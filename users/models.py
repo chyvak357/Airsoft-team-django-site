@@ -55,14 +55,14 @@ class UserAwards(models.Model):
     def __str__(self):
         return self.name
 
-    name = models.CharField(max_length=64, verbose_name='Роль', unique=True)
+    name = models.CharField(max_length=64, verbose_name='Награда', unique=True)
     description = models.TextField(verbose_name='Полное описание')
     image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Награда'
         verbose_name_plural = 'Награды'
-        ordering = ['name']
+        # ordering = ['name']
 
 
 

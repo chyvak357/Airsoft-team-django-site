@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="awards_table">
+        <div class="table-responsive" style="overflow-x:hidden;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="id_colunm">id</th>
+                    <th class="name_colunm_awards">Название</th>
+                    <th class="descr_colunm_awards">Описание</th>
+                    <th>Картинка</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in awards %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>Картинка потом</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

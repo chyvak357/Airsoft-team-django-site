@@ -19,11 +19,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from news.urls import *
+from users.urls import *
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('news.urls')),
+    path('users/', include('users.urls')),
     # path('', main_page),
 ]
 

@@ -12,5 +12,8 @@ from django.contrib.auth import login, logout
 from .models import UserRole, UserAwards, Profile, UserPositions
 
 
-# def test(request):
-#     return render(request, 'users/index.html', {'page_obj': None})
+def test(request):
+    awards = UserAwards.objects.all()
+    context = {'awards': awards}
+
+    return render(request, 'users/awards.html', context)
