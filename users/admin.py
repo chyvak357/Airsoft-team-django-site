@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User, UserRole, UserPositions, UserAwards
+from .models import UserRole, UserPositions, UserAwards, Profile
 
 
 class UserRoleAdmin(admin.ModelAdmin):
@@ -25,7 +25,21 @@ class UserAwardsAdmin(admin.ModelAdmin):
     list_filter = ('name',)
 
 
-admin.site.register(User, UserAdmin)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user',
+                    'patronymic',
+                    'team_alias', 'phone',
+                    'birth_date',
+                    'position', 'role',
+                    'created_at', 'last_online',
+                    )
+    list_display_links = ('id', 'user')
+    search_fields = ('user', 'team_alias')
+    list_filter = ('user', 'role', 'position')
+
+
+# admin.site.register(User, UserAdmin)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(UserRole, UserRoleAdmin)
 admin.site.register(UserPositions, UserPositionsAdmin)
 admin.site.register(UserAwards, UserAwardsAdmin)
