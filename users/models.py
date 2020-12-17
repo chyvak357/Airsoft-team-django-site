@@ -25,6 +25,9 @@ class UserPositions(models.Model):
         verbose_name_plural = 'Должности'
         ordering = ['name']
 
+    def get_absolute_url(self):
+        return reverse('positions_detail', kwargs={'pk': self.pk})
+
 
 class UserRole(models.Model):
     """
@@ -44,6 +47,9 @@ class UserRole(models.Model):
         verbose_name_plural = 'Роли'
         ordering = ['name']
 
+    def get_absolute_url(self):
+        return reverse('roles_detail', kwargs={'pk': self.pk})
+
 
 class UserAwards(models.Model):
     """
@@ -57,13 +63,15 @@ class UserAwards(models.Model):
 
     name = models.CharField(max_length=64, verbose_name='Награда', unique=True)
     description = models.TextField(verbose_name='Полное описание')
-    image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', blank=True, null=True)
+    image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', blank=True)
 
     class Meta:
         verbose_name = 'Награда'
         verbose_name_plural = 'Награды'
         # ordering = ['name']
 
+    def get_absolute_url(self):
+        return reverse('awards_detail', kwargs={'pk': self.pk})
 
 
 class Profile(models.Model):

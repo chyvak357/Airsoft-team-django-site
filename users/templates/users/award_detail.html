@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="awards_table">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">{{ object.name }}</h4>
+                {% if object.image %}
+                    <img src="{{ object.image.url }}" style="height: 64px">
+                {%  endif %}
+                <p>
+                <p class="card-text">{{ object.description }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

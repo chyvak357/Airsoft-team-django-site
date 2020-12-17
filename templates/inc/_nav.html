@@ -3,15 +3,18 @@
 <div>
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" style="background: #333333;">
         <div class="container">
-            <div style="margin-right: 10px;"><img src="{% static 'img/Spiral.png' %}" width="70" height="70"></div><a class="navbar-brand" href="#" style="color: #c5c5c5;">СК "Спираль"</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div style="margin-right: 10px;"><img src="{% static 'img/Spiral.png' %}" width="70" height="70"></div><a class="navbar-brand" href="{% url 'home' %}" style="color: #c5c5c5;">СК "Спираль"</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                     class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link active" href="#" style="color: #c5c5c5;">О команде</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" style="color: #c5c5c5;">Мероприятия</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" style="color: #c5c5c5;">Контакты</a></li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="color: #c5c5c5;">Dropdown </a>
-                        <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item" href="#">Second Item</a><a class="dropdown-item" href="#">Third Item</a></div>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="color: #c5c5c5;">Таблицы</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'awards_list' %}">Награды</a>
+                            <a class="dropdown-item" href="{% url 'roles_list' %}">Роли</a>
+                            <a class="dropdown-item" href="{% url 'positions_list' %}">Позиции</a></div>
                     </li>
                 </ul><span class="navbar-text actions" style="border-radius: 0;padding-left: 9px;padding-right: 34px;border-style: none;border-top-style: solid;border-top-color: rgba(124,50,183,0.7);border-bottom-style: solid;border-bottom-color: rgba(124,50,183,0.7);border-left-style: none;border-left-color: rgba(124,50,183,0.7);"> <a class="login" href="#" style="color: #c5c5c5;">Вход</a><a class="btn btn-light action-button" role="button" href="#" style="border-color: rgb(93,79,132);background: rgb(37,42,142);">Регистрация</a></span></div>
         </div>
