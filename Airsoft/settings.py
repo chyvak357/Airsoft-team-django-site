@@ -144,7 +144,6 @@ STATICFILES_DIRS = [
 ]
 
 
-
 #
 # if DEBUG:
 #     STATICFILES_DIRS = [
