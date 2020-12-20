@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+{#    {% for i in object_list %}#}
+{#        {{i.image}}#}
+{#    {% endfor %}#}
+    <div class="awards_table">
+        <div class="table-responsive" style="overflow-x:hidden;">
+            <table class="table">
+                <thead>
+                <tr>
+                    {% for col_item in columns_data %}
+                        <th style="width: {{ col_item.width }}%">{{ col_item.col_name }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for obj in object_list %}
+                    <tr>
+                        {% for col_item in columns_data %}
+                            <td>{{ col_item.obj_field }}</td>
+                            <td>{{ obj.obj_field2 }}</td>
+                            <td>{{ obj.col_item.obj_field }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

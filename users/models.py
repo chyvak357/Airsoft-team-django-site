@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 
@@ -23,6 +25,9 @@ class UserPositions(models.Model):
         verbose_name_plural = 'Должности'
         ordering = ['name']
 
+    def get_absolute_url(self):
+        return reverse('positions_detail', kwargs={'pk': self.pk})
+
 
 class UserRole(models.Model):
     """
@@ -42,6 +47,9 @@ class UserRole(models.Model):
         verbose_name_plural = 'Роли'
         ordering = ['name']
 
+    def get_absolute_url(self):
+        return reverse('roles_detail', kwargs={'pk': self.pk})
+
 
 class UserAwards(models.Model):
     """
@@ -53,49 +61,25 @@ class UserAwards(models.Model):
     def __str__(self):
         return self.name
 
-    name = models.CharField(max_length=64, verbose_name='Роль', unique=True)
+    name = models.CharField(max_length=64, verbose_name='Награда', unique=True)
     description = models.TextField(verbose_name='Полное описание')
-    image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', blank=True, null=True)
+    image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Награда'
         verbose_name_plural = 'Награды'
-        ordering = ['name']
+        # ordering = ['name']
+
+    def get_absolute_url(self):
+        return reverse('awards_detail', kwargs={'pk': self.pk})
 
 
-# class UserManager(BaseUserManager):
-#
-#     use_in_migrations = True
-#
-#     def _create_user(self, username, password, **extra_fields):
-#         """Create and save a User with the given email and password."""
-#         user = self.model(username=username, **extra_fields)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-#
-#     def create_user(self, email, password=None, **extra_fields):
-#         """Create and save a regular User with the given email and password."""
-#         extra_fields.setdefault('is_staff', False)
-#         extra_fields.setdefault('is_superuser', False)
-#         return self._create_user(email, password, **extra_fields)
-#
-#     def create_superuser(self, email, password, **extra_fields):
-#         """Create and save a SuperUser with the given email and password."""
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-#
-#         if extra_fields.get('is_staff') is not True:
-#             raise ValueError('Superuser must have is_staff=True.')
-#         if extra_fields.get('is_superuser') is not True:
-#             raise ValueError('Superuser must have is_superuser=True.')
-#
-#         return self._create_user(email, password, **extra_fields)
-
-
-class User(AbstractUser):
+# TODO Можно добавить поле с описанием от игрока. Типа "О себе"
+class Profile(models.Model):
     """
-    Переопределённая модель для пользователя
+    Дополнительная модель для пользователя
+
+    OtO с User
 
     Многим-ко-многим (MtM)с UserAwards
     https://docs.djangoproject.com/en/3.1/topics/db/examples/many_to_many/
@@ -105,19 +89,23 @@ class User(AbstractUser):
     """
 
     def __str__(self):
-        return f'{self.last_name} {self.first_name}'
+        # return f'{self.user.last_name} {self.user.first_name}'
+        return f'Профиль_пользователя {self.user.username}'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # login == username
     # first_name
     # last_name
     # email
-    patronymic = models.CharField(max_length=32, blank=True, null=True, verbose_name='Отчество')
     team_alias = models.CharField(max_length=64, blank=True, null=True, verbose_name='Позывной', unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона', unique=True)
+    vk_link = models.CharField(max_length=64, blank=True, null=True, verbose_name='Ссылка ВК')
+    # TODO разобраться с формой для дня рождения
     birth_date = models.DateField(null=True, blank=True)
 
     # TODO проверить работу поля position
-    position = models.ForeignKey(UserPositions, on_delete=models.PROTECT, verbose_name='Должность', blank=True)
+    position = models.ForeignKey(UserPositions, on_delete=models.PROTECT, verbose_name='Должность', blank=True, null=True)
 
     # TODO проверить работу поля role
     role = models.ForeignKey(UserRole, on_delete=models.PROTECT, verbose_name='Роль', null=True, blank=True)
@@ -126,20 +114,28 @@ class User(AbstractUser):
     # TODO проверить работу поля awards
     awards = models.ManyToManyField(UserAwards, null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен', null=True)
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен', null=True, blank=True)
+    photo = models.ImageField(upload_to='users/%Y/%m/%d/', verbose_name='Фото', null=True, blank=True)
 
-    last_online = models.DateTimeField(blank=True, null=True)
+    # last_online = models.DateTimeField(blank=True, null=True)
 
     # TODO проверить работу поля events
     events = models.ManyToManyField('events.UserEvent', null=True, blank=True, related_name='user')
 
-    # objects = UserManager()
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ['username']
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+        # ordering = ['user.username']
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
 
     # def get_absolute_url(self):
     #     return reverse('users:profile', kwargs={'user': self.username})
