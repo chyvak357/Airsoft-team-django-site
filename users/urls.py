@@ -2,8 +2,11 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    # TODO сделать потом разделение на просмотр профиля для текущего пользователя и просто авторизованного
     path('register/', register, name='register'),
-    path('edit/', edit, name='edit'),
+    path('edit/', edit_profile, name='edit_profile'),
+    path('profile/', edit_profile, name='profile'),
+    # path('profile_auth/', edit_profile, name='profile'),
 
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),

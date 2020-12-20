@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Профиль :: {{ block.super }}
+{% endblock %}
+
+{# TODO Имя пользователя не подставляется в поле. #}
+{# TODO Можно всё заменить Генератором#}
+{% block content %}
+    <div class="container account-settings-container">
+        <div class="row gutters">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="account-settings">
+                            <div class="user-profile">
+                                <div class="user-avatar">
+                                    <img src="https://cdn1.iconfinder.com/data/icons/society-profession-avatar/1024/Society_Profession_Avatar_I-03-512.png"
+                                         alt="Maxwell Admin">
+                                </div>
+                                {#                                <h5 class="user-name">{{ user.username }}</h5>#}
+                                {% if user.profile.team_alias %}
+                                    {#Позывной#}
+                                    <h5 class="user-name">{{ user.profile.team_alias }}</h5>
+                                {% else %}
+                                    <h5 class="user-name">{{ user.username }}</h5>
+                                {% endif %}
+
+
+
+                                {% if user.email %}<h6 class="user-email">{{ user.email }}</h6>{% endif %}
+
+                                {% if user.profile.vk_link %}
+                                    <div class="col item social">
+                                        <a href="{{ user.profile.vk_link }}" target="_blank">
+                                            <i class="icon-social-vkontakte"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                            {% if user.profile.role or user.profile.position %}
+                                <div class="about">
+                                    <h5 class="mb-2 text-primary">В команде</h5>
+                                    <p>{{ user.profile.position }} |
+                                        {{ user.profile.role }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {#        Пропистаь тэг формы и куда отправлять данные#}
+            {#      {% csrf_token %}#}
+
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <form action="{% url 'edit_profile' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h6 class="mb-3 text-primary">Основыне данные</h6>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_u.last_name.id_for_label }}">Фамилия</label>
+                                        {{ form_u.last_name }}
+                                        {#                                        <input type="text" name="{{ form_u.last_name.html_name }}"#}
+                                        {#                                               id="{{ form_u.last_name.id_for_label }}" class="form-control"#}
+                                        {#                                               autocomplete="off" required="" value="{{ user.last_name }}"#}
+                                        {#                                               placeholder="Фамилия">#}
+                                        {#                                    <input type="text" class="form-control" id="fullName" placeholder="Фамилия">#}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_u.last_name.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_u.first_name.id_for_label }}">Имя</label>
+                                        <input type="text" name="{{ form_u.first_name.html_name }}"
+                                               id="{{ form_u.first_name.id_for_label }}" class="form-control"
+                                               autocomplete="off" required=""
+                                               value="{{ user.first_name }}" placeholder="Имя">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_u.first_name.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_u.username.id_for_label }}">Логин</label>
+                                        <input type="text" name="{{ form_u.username.html_name }}"
+                                               id="{{ form_u.username.id_for_label }}" class="form-control"
+                                               autocomplete="off" required value="{{ user.username }}"
+                                               placeholder="login">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_u.last_name.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_u.email.id_for_label }}">Почта</label>
+                                        <input type="text" name="{{ form_u.email.html_name }}"
+                                               id="{{ form_u.email.id_for_label }}" class="form-control"
+                                               autocomplete="off"
+                                               required="" value="{{ user.email }}" placeholder="example@gmail.com">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_u.first_name.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h6 class="mb-3 text-primary">Дополнительные данные</h6>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_p.team_alias.id_for_label }}">Позывной</label>
+                                        <input type="text" name="{{ form_p.team_alias.html_name }}"
+                                               id="{{ form_p.team_alias.id_for_label }}" class="form-control"
+                                               autocomplete="off"
+                                               required="" value="{{ user.profile.team_alias }}"
+                                               placeholder="Твой позывной, боец!">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_p.team_alias.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_p.email.id_for_label }}">Номер телефона</label>
+                                        <input type="text" name="{{ form_p.phone.html_name }}"
+                                               id="{{ form_p.phone.id_for_label }}" class="form-control"
+                                               autocomplete="off"
+                                               required="" value="{{ user.profile.phone }}" placeholder="88005553535">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_p.phone.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {#  TODO ЭТО SELECT!!!!!! #}
+                                {#  Вариант попробовать запихнуть всё это в форму или самому сгенерить его #}
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_p.role.id_for_label }}">Роль в отряде</label>
+                                        {{ form_p.role }}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_p.role.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="{{ form_p.vk_link.id_for_label }}">Ссылка на профиль ВК</label>
+                                        <input type="text" name="{{ form_p.vk_link.html_name }}"
+                                               id="{{ form_p.vk_link.id_for_label }}" class="form-control"
+                                               autocomplete="off"
+                                               required="" value="{{ user.profile.vk_link }}"
+                                               placeholder="https://vk.com/skspiral">
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form_p.profile.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="text-right">
+                                        <button type="submit" id="submit" name="submit" class="btn btn-primary">Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

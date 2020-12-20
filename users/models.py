@@ -100,7 +100,7 @@ class Profile(models.Model):
     # email
     team_alias = models.CharField(max_length=64, blank=True, null=True, verbose_name='Позывной', unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона', unique=True)
-
+    vk_link = models.CharField(max_length=64, blank=True, null=True, verbose_name='Ссылка ВК')
     # TODO разобраться с формой для дня рождения
     birth_date = models.DateField(null=True, blank=True)
 

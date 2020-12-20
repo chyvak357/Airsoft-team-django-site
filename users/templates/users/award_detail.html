@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+    {{ object.name }} :: {{ block.super }}
+{% endblock %}
+
 {% block content %}
     <div class="awards_table">
         <div class="card">

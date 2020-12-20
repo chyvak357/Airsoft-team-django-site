@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 from .models import UserRole, UserAwards, Profile, UserPositions
 from .forms import AwardsForm, UserRegisterForm, UserEditForm, ProfileEditForm, UserLoginForm
@@ -99,21 +100,46 @@ def register(request):
     return render(request, 'users/register.html', {'form_u': user_form, 'form_p': profile_form})
 
 
-def edit(request):
+# team_alias
+# phone
+# role
+# characteristic
+# vk_link
+
+def edit_profile(request):
     if request.method == 'POST':
         user_form = UserEditForm(instance=request.user, data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return redirect('home')
+            messages.success(request, 'Данные успешно изменены')
+            return redirect('profile')
+        else:
+            messages.success(request, 'Ошибка при сохранении данных')
+            return redirect('profile')
+
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
-        return render(request,
-                      'users/edit.html',
-                      {'user_form': user_form,
-                       'profile_form': profile_form})
+        return render(request, 'users/profile.html', {'form_u': user_form, 'form_p': profile_form})
+
+#
+# def edit_profile(request):
+#     if request.method == 'POST':
+#         user_form = UserEditForm(instance=request.user, data=request.POST)
+#         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user_form.save()
+#             profile_form.save()
+#             return redirect('home')
+#     else:
+#         user_form = UserEditForm(instance=request.user)
+#         profile_form = ProfileEditForm(instance=request.user.profile)
+#         return render(request,
+#                       'users/edit.html',
+#                       {'user_form': user_form,
+#                        'profile_form': profile_form})
 
 
 # class UsersIO:
@@ -129,9 +155,15 @@ def user_login(request):
         form = UserLoginForm()
     return render(request, 'users/login.html', {'form': form})
 
+
 def user_logout(request):
     logout(request)
     return redirect('home')
+
+
+@login_required
+def user_profile(request):
+    return render(request, 'users/profile.html')
 
 
 

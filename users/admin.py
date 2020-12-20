@@ -31,10 +31,10 @@ class ProfileAdmin(admin.ModelAdmin):
                     'team_alias', 'phone',
                     'birth_date',
                     'position', 'role',
-                    'created_at',
+                    'vk_link',
                     # 'last_online',
                     )
-    list_display_links = ('id', 'user')
+    list_display_links = ('id', 'user', 'team_alias')
     search_fields = ('user', 'team_alias')
     list_filter = ('user', 'role', 'position')
 

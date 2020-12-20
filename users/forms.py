@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
@@ -40,24 +40,32 @@ class PositionsForm(forms.ModelForm):
         }
 
 
-class UserEditForm(forms.ModelForm):
+class UserEditForm(UserChangeForm):
     """Для встроенной пользовательской модели"""
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'last_name', 'email')
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.Select(attrs={'class': 'form-control'})
+        }
 
 
+# TODO Добавить валидацию и проверку уникальности для полей
 class ProfileEditForm(forms.ModelForm):
     """Для профиля"""
     class Meta:
         model = Profile
         # fields = ('patronymic', 'team_alias', 'phone', 'birth_date', 'position', 'role'
-        fields = ['team_alias', 'phone', 'role', 'characteristic']
+        fields = ['team_alias', 'phone', 'role', 'characteristic', 'vk_link']
         widgets = {
             'team_alias': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.Select(attrs={'class': 'form-control'}),
-            'characteristic': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+            'characteristic': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'vk_link': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'})
         }
 
 

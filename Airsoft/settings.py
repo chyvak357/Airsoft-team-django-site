@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from django.urls import reverse_lazy
 from pathlib import Path
 import os.path
 
@@ -153,3 +154,6 @@ STATICFILES_DIRS = [
 #     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 INTERNAL_IPS = ['127.0.0.1']
+
+# TODO косяк с тем, что не могу сформировать путь
+LOGIN_URL = '/users/login'
