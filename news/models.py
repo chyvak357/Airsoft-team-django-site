@@ -1,30 +1,25 @@
 from django.db import models
 from django.urls import reverse
 
+
 class News(models.Model):
 
     def __str__(self):
-        """ Что бы вернуть [<News: Новость 1>, а не <News: News object (1)> """
         return self.title
 
-    # id по умолчанию создаёт
     title = models.CharField(max_length=150, verbose_name='Наименование')
-    content = models.TextField(blank=True, verbose_name='Контент')  # blank=True необязательно к заполнению
+    content = models.TextField(blank=True, verbose_name='Контент')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', blank=True)
+    photo = models.ImageField(upload_to='news_media/%Y/%m/%d/', verbose_name='Фото', blank=True)
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
-
-    # Внешняя ссылка на другую таблицу
-    # category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    is_public = models.BooleanField(default=True, verbose_name='Общий доступ')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     views = models.IntegerField(default=0)
 
     def get_absolute_url(self):
-        # return reverse('view_news', kwargs={'news_id': self.pk})
         return reverse('view_news', kwargs={'pk': self.pk})
 
-    # Это для админки, что бы норм отображать всё
     class Meta:
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
@@ -38,9 +33,6 @@ class Category(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        # Сначала название маршрута, в потом параметр маршрута
-        # Смотри на views path('category/<int:category_id>/', get_category, name='category')
-        # Работа схожа на тег {% url 'category' cat.pk %}
         return reverse('category', kwargs={'category_id': self.pk})
 
     class Meta:

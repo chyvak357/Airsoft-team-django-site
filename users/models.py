@@ -63,7 +63,7 @@ class UserAwards(models.Model):
 
     name = models.CharField(max_length=64, verbose_name='Награда', unique=True)
     description = models.TextField(verbose_name='Полное описание')
-    image = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Картинка', null=True, blank=True)
+    image = models.ImageField(upload_to='awards_pic/%Y/%m/%d/', verbose_name='Картинка', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Награда'
@@ -112,7 +112,7 @@ class Profile(models.Model):
     characteristic = models.TextField(blank=True, null=True, verbose_name='Характеристика')
 
     # TODO проверить работу поля awards
-    awards = models.ManyToManyField(UserAwards, null=True, blank=True)
+    awards = models.ManyToManyField(UserAwards, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен', null=True, blank=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', verbose_name='Фото', null=True, blank=True)
@@ -120,7 +120,7 @@ class Profile(models.Model):
     # last_online = models.DateTimeField(blank=True, null=True)
 
     # TODO проверить работу поля events
-    events = models.ManyToManyField('events.UserEvent', null=True, blank=True, related_name='user')
+    events = models.ManyToManyField('events.UserEvent', blank=True, related_name='user')
 
 
     class Meta:
@@ -137,11 +137,6 @@ class Profile(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
-    # def get_absolute_url(self):
-    #     return reverse('users:profile', kwargs={'user': self.username})
-    #
-    # def initials(self):
-    #     return get_initials(self)
 
 # test_user1 = User.objects.create(username='test_user',
 #                                  first_name='Test_n',

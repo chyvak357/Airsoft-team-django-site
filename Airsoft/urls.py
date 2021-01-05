@@ -26,7 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('news.urls')),
     path('users/', include('users.urls')),
-    # path('', main_page),
 ]
 
 if settings.DEBUG:

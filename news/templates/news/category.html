@@ -1,0 +1,45 @@
+{% extends 'news_base.html'%}
+{#{% load news_tags %}#}
+
+{% block title %}
+    {{ category.title }} :: {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'inc/_news_sidebar.html' %}
+{#    {% show_categories arg2='User' %}#}
+{% endblock %}
+
+
+{% block content %}
+    {% for item in news %}
+
+        {% if item.is_published %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    Категори: {{ item.category.title }}
+                </div>
+                <div class="card-body">
+                    <div class="media">
+                        {% if item.photo %}
+                            <img src="{{ item.photo.url }}" alt="" width="350" class="mr-3">
+                        {% else %}
+                            <img src="https://picsum.photos/350/235/?blur=2" alt="">
+                        {% endif %}
+                        <div class="media-body">
+                            <h5 class="card-title"> {{ item.title }}</h5>
+                            <p class="card-text">{{ item.content | linebreaks | truncatewords:50 }}</p>
+                            <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Read more</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer text-muted">
+                    {{ item.created_at | date:"Y-m-d H:i:s" }}
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <h3>Извините, статей ещё не завезли :c </h3>
+    {% endfor %}
+{% endblock %}
