@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Роли/Должности :: {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="awards_table">
+        <div class="table-responsive" style="overflow-x:hidden;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="name_colunm_awards">Название</th>
+                    <th class="descr_colunm_awards">Описание</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in object_list %}
+                    <tr>
+                        <td><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></td>
+                        <td>{{ item.description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

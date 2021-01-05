@@ -17,7 +17,7 @@ class UserPositions(models.Model):
         return self.name
 
     name = models.CharField(max_length=64, verbose_name='Должность', unique=True)
-    short_description = models.CharField(max_length=512, verbose_name='Краткое описание', blank=True, null=True)
+    description = models.CharField(max_length=512, verbose_name='Краткое описание', blank=True, null=True)
     full_description = models.TextField(verbose_name='Полное описание', blank=True, null=True)
 
     class Meta:

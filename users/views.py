@@ -54,7 +54,7 @@ class CreateAwards(CreateView):
 
 class RolesList(ListView):
     model = UserRole
-    template_name = 'users/awards.html'
+    template_name = 'users/roles.html'
     allow_empty = False
 
 
@@ -66,7 +66,7 @@ class ViewRoles(DetailView):
 
 class PositionsList(ListView):
     model = UserPositions
-    template_name = 'users/awards.html'
+    template_name = 'users/roles.html'
     allow_empty = False
 
 

@@ -12,7 +12,7 @@ class UserRoleAdmin(admin.ModelAdmin):
 
 
 class UserPositionsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'short_description')
+    list_display = ('id', 'name', 'description')
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('name',)

@@ -15,8 +15,8 @@
             Категория: <a href="{{ news_item.category.get_absolute_url }}"> {{ news_item.category.title }}</a>
         </div>
         <div class="d-sm-block d-md-none">
-            {% if item.photo %}
-                <img src="{{ item.photo.url }}" alt="" width="50%" class="card-img mr-3">
+            {% if news_item.photo %}
+                <img src="{{ news_item.photo.url }}" alt="" width="50%" class="card-img mr-3">
             {% else %}
                 <img src="https://picsum.photos/350/235/?blur=2" width="50%" alt="" class="card-img mr-3">
             {% endif %}
@@ -28,7 +28,10 @@
                     <img src="https://picsum.photos/350/235/?blur=2" alt="" class="float-left mr-3 d-none d-md-block">
                 {% endif %}
                     <h5 class="card-title"> {{ news_item.title }}</h5>
+                {% autoescape off %}
                     <p class="card-text">{{ news_item.content | linebreaks }}</p>
+                {% endautoescape %}
+
             </div>
 
         <div class="card-footer text-muted">

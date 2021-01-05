@@ -22,20 +22,19 @@
                     <img src="https://picsum.photos/350/235/?blur=2" width="50%" alt="" class="card-img mr-3">
                 {% endif %}
             </div>
+
             <div class="card-body">
-
-
                 <div class="media">
-
                     {% if item.photo %}
                         <img src="{{ item.photo.url }}" alt="" width="50%" class="mr-3 d-none d-md-block">
                     {% else %}
                         <img src="https://picsum.photos/350/235/?blur=2" width="50%" alt="" class="mr-3 d-none d-md-block">
                     {% endif %}
-
                     <div class="media-body">
                         <h5 class="card-title"> {{ item.title }}</h5>
+                        {% autoescape off %}
                         <p class="card-text">{{ item.content | linebreaks | truncatewords:50 }}</p>
+                        {% endautoescape %}
                         <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Read more</a>
                     </div>
                 </div>
