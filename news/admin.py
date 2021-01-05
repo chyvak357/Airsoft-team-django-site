@@ -2,13 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import News, Category
-# from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
 
 class NewsAdminForm(forms.ModelForm):
-    # content = forms.CharField(widget=CKEditorUploadingWidget())
-
+    content = forms.CharField(widget=CKEditorUploadingWidget())
     class Meta:
         model = News
         fields = '__all__'
