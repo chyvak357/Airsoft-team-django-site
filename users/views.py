@@ -114,10 +114,12 @@ def edit_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, 'Данные успешно изменены')
-            return redirect('profile')
+            # return redirect('profile')
+            return render(request, 'users/profile.html', {'form_u': user_form, 'form_p': profile_form})
         else:
             messages.success(request, 'Ошибка при сохранении данных')
-            return redirect('profile')
+            return render(request, 'users/profile.html', {'form_u': user_form, 'form_p': profile_form})
+            # return redirect('profile')
 
     else:
         user_form = UserEditForm(instance=request.user)
@@ -152,6 +154,8 @@ def user_login(request):
             user = form.get_user()
             login(request, user)
             return redirect('home')
+        else:
+            return render(request, 'users/login.html', {'form': form})
     else:
         form = UserLoginForm()
     return render(request, 'users/login.html', {'form': form})

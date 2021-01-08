@@ -4,7 +4,6 @@
     Профиль :: {{ block.super }}
 {% endblock %}
 
-{# TODO Имя пользователя не подставляется в поле. #}
 {# TODO Можно всё заменить Генератором#}
 {% block content %}
     <div class="container account-settings-container">
@@ -18,15 +17,11 @@
                                     <img src="https://cdn1.iconfinder.com/data/icons/society-profession-avatar/1024/Society_Profession_Avatar_I-03-512.png"
                                          alt="Maxwell Admin">
                                 </div>
-                                {#                                <h5 class="user-name">{{ user.username }}</h5>#}
                                 {% if user.profile.team_alias %}
-                                    {#Позывной#}
                                     <h5 class="user-name">{{ user.profile.team_alias }}</h5>
                                 {% else %}
                                     <h5 class="user-name">{{ user.username }}</h5>
                                 {% endif %}
-
-
 
                                 {% if user.email %}<h6 class="user-email">{{ user.email }}</h6>{% endif %}
 
@@ -51,9 +46,6 @@
                 </div>
             </div>
 
-            {#        Пропистаь тэг формы и куда отправлять данные#}
-            {#      {% csrf_token %}#}
-
             <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                 <div class="card h-100">
                     <div class="card-body">
@@ -68,11 +60,11 @@
                                     <div class="form-group">
                                         <label for="{{ form_u.last_name.id_for_label }}">Фамилия</label>
                                         {{ form_u.last_name }}
-                                        {#                                        <input type="text" name="{{ form_u.last_name.html_name }}"#}
-                                        {#                                               id="{{ form_u.last_name.id_for_label }}" class="form-control"#}
-                                        {#                                               autocomplete="off" required="" value="{{ user.last_name }}"#}
-                                        {#                                               placeholder="Фамилия">#}
-                                        {#                                    <input type="text" class="form-control" id="fullName" placeholder="Фамилия">#}
+                                        {#      <input type="text" name="{{ form_u.last_name.html_name }}"#}
+                                        {#             id="{{ form_u.last_name.id_for_label }}" class="form-control"#}
+                                        {#             autocomplete="off" required="" value="{{ user.last_name }}"#}
+                                        {#             placeholder="Фамилия">#}
+                                        {#  <input type="text" class="form-control" id="fullName" placeholder="Фамилия">#}
                                         <div class="invalid-feedback" style="display: block">
                                             {{ form_u.last_name.errors }}
                                         </div>
@@ -83,8 +75,8 @@
                                         <label for="{{ form_u.first_name.id_for_label }}">Имя</label>
                                         <input type="text" name="{{ form_u.first_name.html_name }}"
                                                id="{{ form_u.first_name.id_for_label }}" class="form-control"
-                                               autocomplete="off" required=""
-                                               value="{{ user.first_name }}" placeholder="Имя">
+                                               autocomplete="off" required
+                                               value="{{ user.first_name | default_if_none:"" }}" placeholder="Имя">
                                         <div class="invalid-feedback" style="display: block">
                                             {{ form_u.first_name.errors }}
                                         </div>
@@ -95,12 +87,13 @@
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="{{ form_u.username.id_for_label }}">Логин</label>
+                                        {#                                        {{ form_u.username }}#}
                                         <input type="text" name="{{ form_u.username.html_name }}"
                                                id="{{ form_u.username.id_for_label }}" class="form-control"
                                                autocomplete="off" required value="{{ user.username }}"
                                                placeholder="login">
                                         <div class="invalid-feedback" style="display: block">
-                                            {{ form_u.last_name.errors }}
+                                            {{ form_u.username.errors }}
                                         </div>
                                     </div>
                                 </div>
@@ -110,9 +103,10 @@
                                         <input type="text" name="{{ form_u.email.html_name }}"
                                                id="{{ form_u.email.id_for_label }}" class="form-control"
                                                autocomplete="off"
-                                               required="" value="{{ user.email }}" placeholder="example@gmail.com">
+                                               value="{{ user.email | default_if_none:"" }}"
+                                               placeholder="example@gmail.com">
                                         <div class="invalid-feedback" style="display: block">
-                                            {{ form_u.first_name.errors }}
+                                            {{ form_u.email.errors }}
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +123,7 @@
                                         <input type="text" name="{{ form_p.team_alias.html_name }}"
                                                id="{{ form_p.team_alias.id_for_label }}" class="form-control"
                                                autocomplete="off"
-                                               required="" value="{{ user.profile.team_alias }}"
+                                               value="{{ user.profile.team_alias | default_if_none:"" }}"
                                                placeholder="Твой позывной, боец!">
                                         <div class="invalid-feedback" style="display: block">
                                             {{ form_p.team_alias.errors }}
@@ -138,24 +132,23 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="{{ form_p.email.id_for_label }}">Номер телефона</label>
+                                        <label for="{{ form_p.phone.id_for_label }}">Номер телефона</label>
                                         <input type="text" name="{{ form_p.phone.html_name }}"
                                                id="{{ form_p.phone.id_for_label }}" class="form-control"
                                                autocomplete="off"
-                                               required="" value="{{ user.profile.phone }}" placeholder="88005553535">
+                                               value="{{ user.profile.phone | default_if_none:"" }}"
+                                               placeholder="88005553535">
                                         <div class="invalid-feedback" style="display: block">
                                             {{ form_p.phone.errors }}
                                         </div>
                                     </div>
                                 </div>
 
-                                {#  TODO ЭТО SELECT!!!!!! #}
-                                {#  Вариант попробовать запихнуть всё это в форму или самому сгенерить его #}
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label for="{{ form_p.role.id_for_label }}">Роль в отряде</label>
                                         {{ form_p.role }}
-                                        <div class="invalid-feedback" style="display: block">
+                                        <div class="invalid-feedback" style="display: block;">
                                             {{ form_p.role.errors }}
                                         </div>
                                     </div>
@@ -166,18 +159,20 @@
                                         <input type="text" name="{{ form_p.vk_link.html_name }}"
                                                id="{{ form_p.vk_link.id_for_label }}" class="form-control"
                                                autocomplete="off"
-                                               required="" value="{{ user.profile.vk_link }}"
+                                               value="{{ user.profile.vk_link | default_if_none:"" }}"
                                                placeholder="https://vk.com/skspiral">
-                                        <div class="invalid-feedback" style="display: block">
-                                            {{ form_p.profile.errors }}
+                                        <div class="invalid-feedback" style="display: block;">
+                                            {{ form_p.vk_link.errors }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row gutters">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="text-right">
-                                        <button type="submit" id="submit" name="submit" class="btn btn-primary">Update
+                                        <button type="submit" id="submit" name="submit" class="btn btn-primary">
+                                            Сохранить
                                         </button>
                                     </div>
                                 </div>
