@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 
 from .models import UserRole, UserAwards, Profile, UserPositions
@@ -91,6 +91,9 @@ def register(request):
             # new_user.profile = profile_form.save()
             new_user.save()
             messages.success(request, 'Вы успешно зарегестрировались')
+
+            new_user = authenticate(username=user_form.cleaned_data['username'], password=user_form.cleaned_data['password1'])
+            login(request, new_user)
             return redirect('home')
         else:
             messages.error(request, 'Ошибка регистрации')
