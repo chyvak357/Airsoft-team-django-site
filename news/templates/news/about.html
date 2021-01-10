@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    О команде :: {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="projects-horizontal text-light bg-dark">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">СК "Спираль"</h2>
+                <p class="text-center">Российская страйкбольная команда, Москва</p>
+            </div>
+            <div class="row projects">
+                <div class="col-sm-6 about-blocks">
+                    <h3 class="name">История создания</h3>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-5"><a href="#"><img class="img-fluid"
+                                                                         src="{% static 'img/about_cards/IMG_7192.jpg' %}"></a>
+                        </div>
+                        <div class="col">
+                            <p class="description">Команда была организована из группы инициативных игроков. Первым
+                                командиром тогда стал.&nbsp;&nbsp;<br>Товарищи! постоянное
+                                информационно-пропагандистское обеспечение нашей деятельности способствует подготовки и
+                                реализации
+                                новых предложений. С другой&nbsp;<br>опагандистское обеспечение нашей деятельности
+                                способствует подготовки и реализации новых п<br><br></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 about-blocks">
+                    <h3 class="name">Развитие</h3>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-5"><a href="#"><img class="img-fluid"
+                                                                         src="{% static 'img/about_cards/IMG_7326.jpg' %}"></a>
+                        </div>
+                        <div class="col">
+                            <p class="description">На протяжении такого-то времени, команда расширилась с 5 человек до
+                                50 человек. Состав решено было разделить на подразделения, и прочее .&nbsp;<br>С другой
+                                стороны постоянный количественный рост и сфера нашей&nbsp;<br>опагандистское
+                                обеспечение нашей деятельности способствует подготовки и реализации новых п<br><br><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 about-blocks">
+                    <h3 class="name">Экипривка</h3>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-5"><a href="#"><img class="img-fluid"
+                                                                         src="{% static 'img/about_cards/IMG_7164.jpg' %}"></a>
+                        </div>
+                        <div class="col">
+                            <p class="description">Мы решили симулировать регулярные ВС РФ или кого-то там, потому что
+                                потому. Сейчас ведётся активная закупка командного снаряжения и тоже немного дополнить
+                                текста&nbsp;<br>опагандистское обеспечение нашей деятельности способствует
+                                подготовки и реализации новых п<br><br></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 about-blocks">
+                    <h3 class="name">Перспективы развития</h3>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-5"><a href="#"><img class="img-fluid"
+                                                                         src="{% static 'img/about_cards/IMG_7350.jpg' %}"></a>
+                        </div>
+                        <div class="col">
+                            <p class="description">На этот год стоит задача с организацией регулярных тренировок для
+                                активных членов команды. Они будут проводить совместно с командой ... под
+                                руководством...&nbsp;<br>Не следует, однако забывать, что консультация с широким активом
+                                играет специалистов) участие в формировании<br><br></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="features-boxed bg-dark text-light">
+        <div class="container">
+            <div class="intro"></div>
+            <div class="row justify-content-center features">
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box bg-secondary"><i class="fa fa-map-marker icon"></i>
+                        <h3 class="name">5 полигонов</h3>
+                        <p class="description">Для воскресных тренировок регулярно посещаются 5 различных полигона</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box bg-secondary"><i class="fa fa-clock-o icon"></i>
+                        <h3 class="name">2 года</h3>
+                        <p class="description">Столько существует команда с момента основания</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box bg-secondary"><i class="icon ion-ios-people icon fa"></i>
+                        <h3 class="name">50 человек</h3>
+                        <p class="description">Которые составляют три командных отделения</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

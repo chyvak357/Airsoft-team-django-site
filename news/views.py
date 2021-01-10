@@ -85,3 +85,7 @@ def get_category(request, category_id):
         'category': current_category
     }
     return render(request, 'news/category.html', context)
+
+
+def about_page(request):
+    return render(request, 'news/about.html')
