@@ -20,7 +20,7 @@ class HomeNews(ListView):
     model = News
     template_name = 'news/home_news_list.html'  # по умолчанию news_list.html
     context_object_name = 'news'  # по умолчанию object_list
-    paginate_by = 2  # количетво отображаемых записей на одной странице
+    paginate_by = 5  # количетво отображаемых записей на одной странице
     # extra_context = {'title': 'Главная'}  # юзать для статичных данных
 
     def get_context_data(self, *, object_list=None, **kwargs):
