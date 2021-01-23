@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 # TODO подумать, как к меро можно закрепить альбом
@@ -9,26 +10,28 @@ class Event(models.Model):
         return self.name
 
     name = models.CharField(max_length=128, verbose_name='Название')
-    description = models.TextField(verbose_name='Описание мероприятия', blank=True, null=True)
+    content = models.TextField(verbose_name='Описание мероприятия', blank=True, null=True)
     price = models.IntegerField(verbose_name='Стоимость', blank=True, null=True)
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
     is_active = models.BooleanField(default=True, verbose_name='Активно')  # меняется при истечении срока
 
-    location_description = models.CharField(max_length=128, verbose_name='Место проведения')
+    location_description = models.CharField(max_length=128, verbose_name='Место проведения', blank=True, null=True)
     location_coord = models.CharField(max_length=128, verbose_name='Координаты', blank=True, null=True)
     meeting_point = models.CharField(max_length=128, verbose_name='Точка сбора', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлено')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлено')
 
-    close_reg_at = models.DateTimeField(auto_now=True, verbose_name='Окончание регистрации', blank=True)
-    starting_at = models.DateTimeField(auto_now=True, verbose_name='Начало мероприятия', blank=True)
+    close_reg_at = models.DateTimeField(verbose_name='Окончание регистрации', blank=True, null=True)
+    starting_at = models.DateTimeField(verbose_name='Начало мероприятия', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Мероприятие'
         verbose_name_plural = 'Мероприятия'
         ordering = ['-created_at']
 
+    def get_absolute_url(self):
+        return reverse('view_events', kwargs={'pk': self.pk})
 
 
 class UserEvent(models.Model):
@@ -50,3 +53,7 @@ class UserEvent(models.Model):
 
     user_comment = models.TextField(blank=True, null=True, verbose_name='Комментарий игрока')
     leader_comment = models.TextField(blank=True, null=True, verbose_name='Комментарий пользователя')
+
+    class Meta:
+        verbose_name = 'Пользователь-Мероприятие'
+        verbose_name_plural = 'Пользователь-Мероприятия'

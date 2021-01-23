@@ -1,11 +1,8 @@
 {% load news_tags %}
 <div class="list-group pb-3">
-    {#{{ arg1 }} {{ arg2 }}#}
     {% for cat in categories %}
-        {#        <a href="{% url 'category' cat.pk %}" class="list-group-item list-group-item-action">{{ cat.title }}</a>#}
         <a href="{{ cat.get_absolute_url }}" class="list-group-item list-group-item-action">{{ cat.title }}
                <span class="badge badge-primary badge-pill">{{ cat.cnt }}</span>
         </a>
-
     {% endfor %}
 </div>

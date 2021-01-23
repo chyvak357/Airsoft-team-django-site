@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('news.urls')),
     path('users/', include('users.urls')),
+    path('events/', include('events.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 

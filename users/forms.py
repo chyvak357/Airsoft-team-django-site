@@ -83,15 +83,18 @@ class ProfileEditForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']
-        result = re.match(r'''^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$''', phone)
-        if result:
-            phone = phone.replace(' ', '')
-            phone = phone.replace('-', '')
-            phone = phone.replace('(', '')
-            phone = phone.replace(')', '')
-            return phone
+        if phone:
+            result = re.match(r'''^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$''', phone)
+            if result:
+                phone = phone.replace(' ', '')
+                phone = phone.replace('-', '')
+                phone = phone.replace('(', '')
+                phone = phone.replace(')', '')
+                return phone
+            else:
+                raise ValidationError('Номер должен соотвествовать формату 88005553535')
         else:
-            raise ValidationError('Номер должен соотвествовать формату 88005553535')
+            return phone
 
 
 class UserLoginForm(AuthenticationForm):

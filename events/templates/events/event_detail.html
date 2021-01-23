@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{#name#}
+{#content#}
+{#price#}
+{#is_published#}
+{#is_active#}
+{#location_description#}
+{#location_coord#}
+{#meeting_point#}
+{#created_at#}
+{#updated_at#}
+{#close_reg_at#}
+{#starting_at#}
+{#    #}
+
+
+{% block content %}
+    <div class="container py-sm-3">
+        <div class="row justify-content-center text-light my-3">
+            <div class="col-md-10 bg-dark my-2 ">
+                <div class="row">
+                    <div class="col-md-8 py-2">
+                        <h3>{{ event_item.name }}</h3>
+
+                        {% autoescape off %}
+                            <p class="card-text">{{ event_item.content | linebreaks }}</p>
+                        {% endautoescape %}
+
+                        {% comment %}
+                        <div class="row py-2">
+                            <div class="col-md-3">Начало</div>
+                            <div class="col-md-4">{{ event_item.starting_at }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-3">Стоимость</div>
+                            <div class="col-md-4">{{ event_item.price|default_if_none:"Бесплатно" }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-3">Место проведения</div>
+                            <div class="col-md-4">{{ event_item.location_description }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-3">Окончание регистрации</div>
+                            <div class="col-md-4">{{ event_item.close_reg_at }}</div>
+                        </div>
+                        {% endcomment %}
+                    </div>
+
+                    <div class="col-md-4 py-2" style="background: #292929">
+                        <div class="row py-2">
+                            {#                            <div class="col-md-4">Начало</div>#}
+                            <div class="col"><h4>{{ event_item.starting_at }}</h4></div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-4">Стоимость</div>
+                            <div class="col">{{ event_item.price|default_if_none:"Бесплатно" }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-4">Место проведения</div>
+                            <div class="col">{{ event_item.location_description }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col-md-4">Окончание регистрации</div>
+                            <div class="col">{{ event_item.close_reg_at }}</div>
+                        </div>
+                        <div class="row py-2">
+                            <div class="col">
+{#                                Отменить регистарцию, если пользователь уже зареган на игру. #}
+
+                                <a href="#" class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
