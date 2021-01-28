@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth import login, logout
 
-from .models import Event
+from .models import Event, UserEvent
 
 
 class HomeEvents(ListView, LoginRequiredMixin):
@@ -33,6 +33,24 @@ class ViewEvents(DetailView):
     def get_object(self, queryset=None):
         obj = super(ViewEvents, self).get_object(queryset=queryset)
 
+        if self.request.user.is_authenticated is False:
+            redirect('home')
+        else:
+            return obj
+
+
+# https://coderoad.ru/47939283/django-CBV-generic-DetailView-redirect-%D0%B5%D1%81%D0%BB%D0%B8-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-%D0%BD%D0%B5-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82
+class ViewUserEvent(DetailView):
+
+    model = UserEvent
+    context_object_name = 'event_item'
+
+    def get_object(self, queryset=None):
+        print(123)
+        obj = super(ViewUserEvent, self).get_object(queryset=queryset)
+        print(456)
+        if obj is None:
+            print('is None')
         if self.request.user.is_authenticated is False:
             redirect('home')
         else:

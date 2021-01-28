@@ -1,20 +1,5 @@
 {% extends 'base.html' %}
 
-{#name#}
-{#content#}
-{#price#}
-{#is_published#}
-{#is_active#}
-{#location_description#}
-{#location_coord#}
-{#meeting_point#}
-{#created_at#}
-{#updated_at#}
-{#close_reg_at#}
-{#starting_at#}
-{#    #}
-
-
 {% block content %}
     <div class="container py-sm-3">
         <div class="row justify-content-center text-light my-3">
@@ -68,7 +53,7 @@
                             <div class="col">
 {#                                Отменить регистарцию, если пользователь уже зареган на игру. #}
 
-                                <a href="#" class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
+                                <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
                             </div>
                         </div>
                     </div>
