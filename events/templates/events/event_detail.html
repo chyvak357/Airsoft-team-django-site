@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load event_users %}
 
 {% block content %}
     <div class="container py-sm-3">
@@ -51,11 +52,51 @@
                         </div>
                         <div class="row py-2">
                             <div class="col">
-{#                                Отменить регистарцию, если пользователь уже зареган на игру. #}
-
-                                <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
+                                {#                                <p>{{ user_event }}</p>#}
+                                {% if user_is_registered %}
+                                    {#                                    <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
+                                    <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
+                                       class="btn btn-primary stretched-link" style="width: 100%">Отменить
+                                        регистрацию</a>
+                                {% else %}
+                                    <a href="{% url 'events_register' event_item.pk %}"
+                                       class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
+                                {% endif %}
                             </div>
                         </div>
+
+                        {% get_event_users event_item.pk as reg_users %}
+                        {% if reg_users.count > 0 %}
+
+                        <div class="row py-2">
+                            <div class="col">
+                                    <div class="row row-cols-3 text-center">
+
+                                        {% for reg_user in reg_users %}
+                                            <div class="col">
+
+                                                {% if reg_user.profile.photo %}
+                                                    <img src="https://w7.pngwing.com/pngs/633/817/png-transparent-computer-icons-military-soldier-military-backpack-swat-soldier-police-thumbnail.png"
+                                                         alt="Avatar" class="avatar mb-1">
+                                                {% else %}
+                                                    <img src="https://cdn1.iconfinder.com/data/icons/society-profession-avatar/1024/Society_Profession_Avatar_I-03-512.png"
+                                                         alt="Avatar" class="avatar mb-1">
+
+                                                {% endif %}
+                                                {% if reg_user.profile.team_alias %}
+                                                    <p>{{ reg_user.profile.team_alias }}</p>
+                                                {% else %}
+                                                    <p>{{ reg_user.first_name }} {{ reg_user.last_name }}</p>
+                                                {% endif %}
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
