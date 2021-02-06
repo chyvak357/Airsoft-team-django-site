@@ -56,8 +56,7 @@
                                 {% if user_is_registered %}
                                     {#                                    <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
                                     <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
-                                       class="btn btn-primary stretched-link" style="width: 100%">Отменить
-                                        регистрацию</a>
+                                       class="btn btn-primary stretched-link" style="width: 100%">Отменить регистрацию</a>
                                 {% else %}
                                     <a href="{% url 'events_register' event_item.pk %}"
                                        class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
@@ -65,11 +64,13 @@
                             </div>
                         </div>
 
-                        {% get_event_users event_item.pk as reg_users %}
+                        {% get_event_users user event_item.pk as reg_users %}
                         {% if reg_users.count > 0 %}
+                            <a href="{% url 'view_event_users' event_item.pk %}" target="_blank">Список игроков:</a>
 
-                        <div class="row py-2">
-                            <div class="col">
+{#                            <p>Список игроков:</p>#}
+                            <div class="row py-2">
+                                <div class="col">
                                     <div class="row row-cols-3 text-center">
 
                                         {% for reg_user in reg_users %}
@@ -93,8 +94,8 @@
                                         {% endfor %}
 
                                     </div>
+                                </div>
                             </div>
-                        </div>
                         {% endif %}
 
                     </div>

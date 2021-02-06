@@ -12,9 +12,12 @@
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'about_page' %}" style="color: #c5c5c5;">О команде</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'news_home' %}" style="color: #c5c5c5;">Новости</a></li>
+
                     {% if request.user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'events_home' %}" style="color: #c5c5c5;">Мероприятия</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'user_events_list' %}" style="color: #c5c5c5;">Мои игры</a></li>
                     {% endif %}
+
                     <li class="nav-item"><a class="nav-link" target="_blank" href="https://vk.com/sk.spiral" style="color: #c5c5c5; ">Контакты</a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown"
                                                      aria-expanded="false" href="#" style="color: #c5c5c5;">Таблицы</a>

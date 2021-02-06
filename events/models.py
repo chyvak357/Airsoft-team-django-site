@@ -46,15 +46,21 @@ class UserEvent(models.Model):
     # 3 - не пошёл (был зареган, но не пришёл)
 
      choices=SHIRT_SIZES
-    SHIRT_SIZES = (
-        ('S', 'Small'),
-        ('M', 'Medium'),
-        ('L', 'Large'),
+    USER_STATUSES = (
+        ('0', 'Пойдёт'),
+        ('1', 'Отменил регистрацию'),
+        ('3', 'Пропустил игру'),
     )
     """
+    USER_STATUSES = (
+        ('0', 'Пойдёт'),
+        ('1', 'Отменил регистрацию'),
+        ('3', 'Пропустил игру'),
+    )
+
     # user будет доступен по свзи MtM
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
-    user_status = models.IntegerField(default=0, verbose_name='Статус регистрации')
+    user_status = models.IntegerField(default=0, choices=USER_STATUSES, verbose_name='Статус регистрации')
     user_payment = models.BooleanField(default=False, verbose_name='Статус оплаты')
     visited = models.BooleanField(default=False, verbose_name='Посещение')
 

@@ -3,6 +3,10 @@
 
 {% block content %}
     <div class="container py-sm-3">
+        {% if events.count < 1 %}
+            <h4 class="text-center">Список мероприятий пуст</h4>
+        {% endif %}
+
         <div class="row justify-content-center text-light">
             {% for event in events %}
                 <div class="col-md-10 bg-dark pt-3 pb-1 my-2 ">
@@ -23,8 +27,9 @@
                     </div>
                 </div>
             {% endfor %}
-
         </div>
+
+
         <div class="row justify-content-center text-light">
             <div class="col-md-10 pt-3 pb-1 my-2 ">
                 {% include 'inc/_paginator.html' %}

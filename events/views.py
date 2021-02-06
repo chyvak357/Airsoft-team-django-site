@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
 from .models import Event, UserEvent
-
+from users.models import User
 
 # from django.contrib.auth.forms import UserCreationForm если бы не юзали свою форму
 
@@ -22,6 +22,10 @@ class HomeEvents(ListView, LoginRequiredMixin):
         return context
 
     def get_queryset(self):
+        if 'user-events' in str(self.request):
+            # Только те, на которые зареган текущий пользователь
+
+            return Event.objects.filter(pk__in=self.request.user.profile.events.all().values_list('event', flat=True), userevent__user_status=0, userevent__user=self.request.user.profile)
         return Event.objects.filter(is_published=True)
 
 
@@ -97,4 +101,51 @@ def register_cancel(request, *args, **kwargs):
     user_event.user_status = 1
     user_event.save()
     return redirect('view_events', pk=kwargs.get('pk_event'))
+
+
+# class EventUsersList(ListView):
+#     model = UserEvent
+#     template_name = 'events/users_on_event.html'
+#     # allow_empty = False
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         # Для генерации таблицы передаём количество столбцов и для каждоо ширину в процентах
+#         # context['columns_num'] = 4
+#         context['columns_data'] = (
+#             {'col_name': 'id', 'width': 5, 'obj_field': 'pk'},
+#             {'col_name': 'Название', 'width': 25, 'obj_field': 'name'},
+#             {'col_name': 'Описание', 'width': 50, 'obj_field': 'description'},
+#             {'col_name': 'Картинка', 'width': 20, 'obj_field': 'image'}
+#         )
+#         return context
+
+
+# Подходит для получения списка данных
+class EventUsersList(ListView):
+    model = UserEvent
+    allow_empty = False
+    template_name = 'events/users_on_event.html'
+    extra_context = {}
+#     Доп данные из context, но не оч использовать его
+# Что бы получить данные, то нужно теперь в urls использовать
+# AwardsTest.as_view()
+
+    # переопределилил метод для добавления данных контекста
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Просто пример чего-то там'
+        context['event_pk'] = self.kwargs.get('pk')
+        return context
+
+    # Изменяем запрос на получение данных
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        # Номер текущей игры
+        users_list = []
+
+        event_registrations = UserEvent.objects.filter(event_id=pk, user_status=0)
+        users_list = User.objects.filter(profile__events__in=event_registrations)
+        return users_list
 
