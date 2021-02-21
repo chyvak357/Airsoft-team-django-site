@@ -3,6 +3,10 @@
 
 {% block content %}
     <div class="container py-sm-3">
+        {% if events.count < 1 %}
+            <h4 class="text-center">Список мероприятий пуст</h4>
+        {% endif %}
+
         <div class="row justify-content-center text-light">
             {% for event in events %}
                 <div class="col-md-10 bg-dark pt-3 pb-1 my-2 ">
@@ -11,20 +15,32 @@
                             <h4>{{ event.name }}</h4>
                             <p>Опубликовано: {{ event.created_at }}</p>
                         </div>
-                        <div class="col-md-2 text-center">
+
+                        <div class="col-md-2 d-none d-md-block text-center">
+                            {% if event.starting_at %}
+                                <h4>{{ event.starting_at|date:"d.m.Y" }}</h4>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2 d-none d-block d-md-none">
                             {% if event.starting_at %}
                                 <h4>{{ event.starting_at|date:"d.m.Y" }}</h4>
                             {% endif %}
                         </div>
 
-                        <div class="col-md-2 text-center">
+
+                        <div class="col-md-2 d-none d-md-block text-center">
                             <a href="{{ event.get_absolute_url }}">Открыть</a>
                         </div>
+                        <div class="col-md-2 d-none d-block d-md-none">
+                            <a href="{{ event.get_absolute_url }}">Открыть</a>
+                        </div>
+                        <a href="{{ event.get_absolute_url }}" class="stretched-link"></a>
                     </div>
                 </div>
             {% endfor %}
-
         </div>
+
+
         <div class="row justify-content-center text-light">
             <div class="col-md-10 pt-3 pb-1 my-2 ">
                 {% include 'inc/_paginator.html' %}

@@ -41,14 +41,34 @@ class UserEvent(models.Model):
     Можно отследить где был и что делал.
     После каждого меро можно дать характеристику конкретно для этого игрока
 
-    0 - не определён
-    1 - пойдёт
-    # 2 - не пошёл (был зареган, но не пришёл)
+    0 - пойдёт
+    1 - зарегался, но отменил
+    # 3 - не пошёл (был зареган, но не пришёл)
+
+     choices=SHIRT_SIZES
+    USER_STATUSES = (
+        (0, 'Пойдёт'),
+        (1, 'Отменил регистрацию'),
+        (3, 'Пропустил игру'),
+    )
     """
+    def __str__(self):
+        return self.event.name
+
+    USER_STATUSES = (
+        (0, 'Пойдёт'),
+        (1, 'Отменил регистрацию'),
+        (3, 'Пропустил игру'),
+    )
+    USER_PAYMENT_STATUS = (
+        (False, 'Не оплачено'),
+        (True, 'Оплачено'),
+    )
+
     # user будет доступен по свзи MtM
     event = models.ForeignKey(Event, on_delete=models.PROTECT)
-    user_status = models.IntegerField(default=0, verbose_name='Статус регистрации')
-    user_payment = models.BooleanField(default=False, verbose_name='Статус оплаты')
+    user_status = models.IntegerField(default=0, choices=USER_STATUSES, verbose_name='Статус регистрации')
+    user_payment = models.BooleanField(default=False, verbose_name='Статус оплаты', choices=USER_PAYMENT_STATUS)
     visited = models.BooleanField(default=False, verbose_name='Посещение')
 
     user_comment = models.TextField(blank=True, null=True, verbose_name='Комментарий игрока')

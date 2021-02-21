@@ -25,10 +25,15 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class UserEventAdmin(admin.ModelAdmin):
-    list_display = ('id', 'event', 'user_status', 'user_payment', 'user_comment')
+    list_display = ('id', 'display_user_name', 'event', 'user_status', 'user_payment', 'user_comment')
+
     list_display_links = ('id', 'event')
-    search_fields = ('event',)
-    list_filter = ('event',)
+    search_fields = ('event__name', )
+    list_filter = ('event__name', 'user_status', 'user_payment')
+
+    def display_user_name(self, obj):
+        user_prof = obj.user.all()[0]
+        return f'{user_prof.user.last_name} {user_prof.user.first_name}'
 
 
 admin.site.register(Event, EventAdmin)

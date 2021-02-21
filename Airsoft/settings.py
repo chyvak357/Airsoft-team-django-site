@@ -160,5 +160,4 @@ STATICFILES_DIRS = [
 
 INTERNAL_IPS = ['127.0.0.1']
 
-# TODO косяк с тем, что не могу сформировать путь
 LOGIN_URL = '/users/login'

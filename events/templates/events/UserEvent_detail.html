@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{#event#}
+{#user_status#}
+{#user_payment#}
+{#visited#}
+{#user_comment#}
+{#leader_comment#}
+
+{% block content %}
+    <div class="container py-sm-3">
+        <div class="row justify-content-center text-light my-3">
+            <div class="col-md-10 bg-dark my-2 ">
+                <div class="row">
+                    <div class="col-md-8 py-2">
+                        <h3>{{ event_item.event.name }}</h3>
+                        <p>{{ event_item.user_status }}</p>user_status
+                    </div>
+
+{#                    <div class="col-md-4 py-2" style="background: #292929">#}
+{#                        <div class="row py-2">#}
+                            {#                            <div class="col-md-4">Начало</div>#}
+{#                            <div class="col"><h4>{{ event_item.starting_at }}</h4></div>#}
+{#                        </div>#}
+{#                        <div class="row py-2">#}
+{#                            <div class="col-md-4">Стоимость</div>#}
+{#                            <div class="col">{{ event_item.price|default_if_none:"Бесплатно" }}</div>#}
+{#                        </div>#}
+{#                        <div class="row py-2">#}
+{#                            <div class="col-md-4">Место проведения</div>#}
+{#                            <div class="col">{{ event_item.location_description }}</div>#}
+{#                        </div>#}
+{#                        <div class="row py-2">#}
+{#                            <div class="col-md-4">Окончание регистрации</div>#}
+{#                            <div class="col">{{ event_item.close_reg_at }}</div>#}
+{#                        </div>#}
+{#                        <div class="row py-2">#}
+{#                            <div class="col">#}
+{#                                Отменить регистарцию, если пользователь уже зареган на игру. #}
+{##}
+{#                                <a href="#" class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

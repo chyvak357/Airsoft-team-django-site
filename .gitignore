@@ -1,7 +1,10 @@
 .idea
 venv
 __pycache__
-static
+/static
 Не для импорта
 db.sqlite3
 identifier.sqlite
+test_dump.json
+.restart-app
+airsoft_update.bat

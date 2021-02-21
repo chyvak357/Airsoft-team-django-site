@@ -5,19 +5,42 @@
         <div class="container">
             <div style="margin-right: 10px;"><img src="{% static 'img/Spiral.png' %}" width="70" height="70"></div>
             <a class="navbar-brand" href="{% url 'home' %}" style="color: #c5c5c5;">СК "Спираль"</a>
-            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span
-                    class="navbar-toggler-icon"></span></button>
-            <div
-                    class="collapse navbar-collapse" id="navcol-1">
+
+            <nav class="navbar navbar-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navcol-1" aria-controls="#navcol-1"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+
+            {% comment %}
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% endcomment %}
+
+            <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'about_page' %}" style="color: #c5c5c5;">О команде</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'news_home' %}" style="color: #c5c5c5;">Новости</a></li>
+
                     {% if request.user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'events_home' %}" style="color: #c5c5c5;">Мероприятия</a></li>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link"
+                                                         data-toggle="dropdown"
+                                                         aria-expanded="false" href="#"
+                                                         style="color: #c5c5c5;">Мероприятия</a>
+                            <div class="dropdown-menu bg-dark text-light">
+                                <a class="dropdown-item" style="color: #c5c5c5;" href="{% url 'events_home' %}">Список мероприятий</a>
+                                <a class="dropdown-item" style="color: #c5c5c5;" href="{% url 'user_events_list' %}">Мои игры</a>
+                            </div>
+                        </li>
                     {% endif %}
+
                     <li class="nav-item"><a class="nav-link" target="_blank" href="https://vk.com/sk.spiral" style="color: #c5c5c5; ">Контакты</a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown"
-                                                     aria-expanded="false" href="#" style="color: #c5c5c5;">Таблицы</a>
+                                                     aria-expanded="false" href="#" style="color: #c5c5c5;">Структура СК</a>
                         <div class="dropdown-menu bg-dark text-light">
                             <a class="dropdown-item" style="color: #c5c5c5;" href="{% url 'awards_list' %}">Награды</a>
                             <a class="dropdown-item" style="color: #c5c5c5;" href="{% url 'roles_list' %}">Роли</a>
@@ -25,7 +48,16 @@
                     </li>
                 </ul>
                 <span class="navbar-text actions"
-                      style="border-radius: 0;padding-left: 9px;padding-right: 34px;border-style: none;border-top-style: solid;border-top-color: rgba(124,50,183,0.7);border-bottom-style: solid;border-bottom-color: rgba(124,50,183,0.7);border-left-style: none;border-left-color: rgba(124,50,183,0.7);">
+                      style="
+                              margin-right: auto;
+                              border-radius: 0;
+                              padding-left: 10px;
+                              padding-right: 10px;
+                              border-style: none;
+                              border-bottom-style: solid;
+                              border-bottom-color: rgba(85,53,111,0.7);
+                              border-left-color: rgba(85,53,111,0.7);"
+                >
 
                     {% if request.user.is_authenticated %}
                         <a class="login" href="{% url 'logout' %}" style="color: #c5c5c5;">Выход</a>
@@ -34,11 +66,12 @@
                     {% endif %}
 
                     {% if request.user.is_authenticated %}
-                        <a class="btn btn-light action-button" role="button" href="{% url 'profile' %}"
-                           style="border-color: rgb(93,79,132);background: rgb(37,42,142);">Профиль</a>
+                        <a class="btn btn-light action-button" role="button" href="{% url 'profile' %}" style="
+                            border-color: rgb(255,255,255);
+                            background: rgb(54,57,115);">Профиль</a>
                     {% else %}
                         <a class="btn btn-light action-button" role="button" href="{% url 'register' %}"
-                           style="border-color: rgb(93,79,132);background: rgb(37,42,142);">Регистрация</a>
+                           style="border-color: rgb(93,79,132);background: rgb(54,57,115);">Регистрация</a>
                     {% endif %}
 
                 </span>

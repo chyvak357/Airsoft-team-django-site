@@ -41,6 +41,19 @@
                                         {{ user.profile.role }}</p>
                                 </div>
                             {% endif %}
+
+                            {% if user.profile.awards %}
+                                <div class="about">
+                                    <h5 class="mb-2 text-primary">Награды</h5>
+                                    {% for award in user.profile.awards.all %}
+                                        <p>
+                                            <a href="{{ award.get_absolute_url }}" target="_blank">
+                                                {{ award.name }}
+                                            </a>
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

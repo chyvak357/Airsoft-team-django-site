@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load event_users %}
+
+{% block content %}
+    <div class="awards_table">
+        <div class="table-responsive" style="overflow-x:hidden;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="name_colunm_awards">Пользователь</th>
+                    <th class="descr_colunm_awards">Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in object_list %}
+                    {% get_detail_userreg item event_pk as userevent_data %}
+                    <tr>
+                        <td>{{ item.last_name }} {{ item.first_name }}</td>
+                        <td>{{ userevent_data.get_user_status_display }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

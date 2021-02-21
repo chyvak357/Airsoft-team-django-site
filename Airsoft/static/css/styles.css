@@ -1,0 +1,150 @@
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.central_block {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+}
+
+.container.main_slider {
+  height: 300px;
+}
+
+/*#carouser_mainpage {*/
+/*  height: 100px;*/
+/*}*/
+
+#carousel_mainpage {
+  /*height: 500px;*/
+  /*max-height: 720px;*/
+  max-height: 500px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+}
+
+#carousel-1 {
+  height: inherit;
+}
+
+#car_inner {
+  height: inherit;
+}
+
+#main_cards {
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+}
+
+
+
+
+
+
+/*body{margin-top:20px;*/
+/*color: #bcd0f7;*/
+/*    background: #1A233A;*/
+/*}*/
+.account-settings-container{
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.account-settings .user-profile {
+    margin: 0 0 1rem 0;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+.account-settings .user-profile .user-avatar {
+    margin: 0 0 1rem 0;
+}
+.account-settings .user-profile .user-avatar img {
+    width: 90px;
+    height: 90px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+}
+.account-settings .user-profile h5.user-name {
+    margin: 0 0 0.5rem 0;
+}
+.account-settings .user-profile h6.user-email {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+.account-settings .about {
+    margin: 1rem 0 0 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
+.card {
+    background: #272E48;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 0;
+    margin-bottom: 1rem;
+}
+.form-control {
+    border: 1px solid #596280;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    font-size: .825rem;
+    background: #1A233A;
+    color: #bcd0f7;
+}
+
+
+.container.main_slider {
+  height: 300;
+}
+
+
+
+.pagination > li > a
+{
+    background-color: #3c3c3c;
+    color: #90b4bd;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    /*color: #5a5a5a;*/
+    background-color: #5a5a5a;
+    /*border: solid 1px #5a5a5a !Important;*/
+    /*border-color: #ddd;*/
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #5a5a5a !Important;
+    /*border: solid 1px #5a5a5a !Important;*/
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #5a5a5a !Important;
+    /*border: solid 1px #eee;*/
+}
