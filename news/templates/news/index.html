@@ -32,30 +32,29 @@
 
 <div id="main_cards">
     <div class="card-group">
-        <div class="card" style="margin-right: 7px;"><img class="card-img-top w-100 d-block"
-                                                          src="{% static 'img/main_cards/team_res.jpg' %}">
+        <div class="card"  style="margin-right: 7px;">
+            <img class="card-img-top w-100 d-block" src="{% static 'img/main_cards/team_res.jpg' %}">
             <div class="card-body">
                 <h4 class="card-title">Команда</h4>
-                <p class="card-text">Команда СК "Спираль" активно участвует в тренировках. Постоянное количество
-                    участников, посещающих занятия больше, чем среднее у команд</p>
-                <button class="btn btn-primary" type="button" onclick="document.location='{% url 'about_page' %}'"style="width: 100%;">Подробнее</button>
+                {# btn btn-primary #}
+                <a href="{% url 'about_page' %}" class="stretched-link"></a>
+{#                <button class="btn btn-primary" type="button" onclick="document.location='{% url 'about_page' %}'"style="width: 100%;">Подробнее</button>#}
             </div>
         </div>
-        <div class="card" style="margin-right: 10px;"><img class="card-img-top w-100 d-block"
-                                                           src="{% static 'img/main_cards/IMG_7341_res.jpg' %}">
+        <div class="card"  style="margin-right: 7px;">
+            <img class="card-img-top w-100 d-block" src="{% static 'img/main_cards/IMG_7341_res.jpg' %}">
             <div class="card-body">
                 <h4 class="card-title">Новости</h4>
-                <p class="card-text">Новости нашей команды и мировые значимые события</p>
-                <button onclick="document.location='{% url 'news_home' %}'" class="btn btn-primary" type="button" style="width: 100%;">Перейти</button>
+                <a href="{% url 'news_home' %}" class="stretched-link"></a>
+{#                <button class="btn btn-primary" type="button" onclick="document.location='{% url 'about_page' %}'"style="width: 100%;">Подробнее</button>#}
             </div>
         </div>
-        <div class="card"><img class="card-img-top w-100 d-block"
-                               src="{% static 'img/main_cards/IMG_7164_res.jpg' %}">
+                <div class="card"  style="margin-right: 7px;">
+            <img class="card-img-top w-100 d-block" src="{% static 'img/main_cards/IMG_7164_res.jpg' %}">
             <div class="card-body">
                 <h4 class="card-title">Учебный материал</h4>
-                <p class="card-text">Постоянно пополняемая база учебных материалов от старой школы военной
-                    подготовки и реальных бойцов ВС России.</p>
-                <button onclick="document.location='{% url 'news_home' %}'" class="btn btn-primary" type="button" style="width: 100%;">К материалам</button>
+                <a href="{% url 'news_home' %}" class="stretched-link"></a>
+{#                <button class="btn btn-primary" type="button" onclick="document.location='{% url 'about_page' %}'"style="width: 100%;">Подробнее</button>#}
             </div>
         </div>
     </div>

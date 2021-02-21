@@ -1,6 +1,7 @@
-/*.errorlist {*/
-/*  margin-bottom: 0;*/
-/*}*/
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+}
 
 .avatar {
     vertical-align: middle;
@@ -114,4 +115,36 @@
 
 .container.main_slider {
   height: 300;
+}
+
+
+
+.pagination > li > a
+{
+    background-color: #3c3c3c;
+    color: #90b4bd;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    /*color: #5a5a5a;*/
+    background-color: #5a5a5a;
+    /*border: solid 1px #5a5a5a !Important;*/
+    /*border-color: #ddd;*/
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #5a5a5a !Important;
+    /*border: solid 1px #5a5a5a !Important;*/
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #5a5a5a !Important;
+    /*border: solid 1px #eee;*/
 }

@@ -19,13 +19,13 @@ class UserPositionsAdmin(admin.ModelAdmin):
 
 
 class UserAwardsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description')
-    list_display_links = ('id', 'name')
-    search_fields = ('name',)
-    list_filter = ('name',)
+        list_display = ('id', 'name', 'description')
+        list_display_links = ('id', 'name')
+        search_fields = ('name',)
+        list_filter = ('name',)
 
 
-# Full version
+
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('id', 'user',
                     'team_alias', 'phone',

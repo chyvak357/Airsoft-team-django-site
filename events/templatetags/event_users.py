@@ -18,4 +18,12 @@ def get_event_users(user, event_id):
 @register.simple_tag()
 def get_detail_userreg(user, event_id):
     """Доп данные для списка пользователей на игре"""
-    return UserEvent.objects.get(user__user=user, event_id=event_id)
+
+    # Пример данных: {'id': 21, 'event_id': 6, 'user_status': 0, 'user_payment': False, 'visited': False, 'user_comment': None, 'leader_comment': None}
+    test_tmp = UserEvent.objects.get(user__user=user, event_id=event_id)
+    return test_tmp
+
+
+@register.filter(name='cut', is_safe=True)
+def cut(value, arg):
+    return value.replace(arg, '')

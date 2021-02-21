@@ -88,6 +88,8 @@ def register_event(request, *args, **kwargs):
 
     if created:
         obj.user.add(request.user.profile)
+        # request.user.profile.events.add(obj)
+        # request.user.profile.save()
     else:
         # уже был зареган, но отказывался
         obj.user_status = 0
@@ -125,7 +127,7 @@ def register_cancel(request, *args, **kwargs):
 # Подходит для получения списка данных
 class EventUsersList(ListView):
     model = UserEvent
-    allow_empty = False
+    allow_empty = False  # кинет 404 при попытке отобразить пустой список
     template_name = 'events/users_on_event.html'
     extra_context = {}
 #     Доп данные из context, но не оч использовать его
