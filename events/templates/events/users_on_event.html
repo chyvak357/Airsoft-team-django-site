@@ -4,10 +4,11 @@
 {% block content %}
     <div class="awards_table">
         <div class="table-responsive" style="overflow-x:hidden;">
-            <table class="table">
+            <table class="table mb-0">
                 <thead>
                 <tr>
                     <th class="name_colunm_awards">Пользователь</th>
+                    <th class="descr_colunm_awards">Позывной</th>
                     <th class="descr_colunm_awards">Статус</th>
                 </tr>
                 </thead>
@@ -16,6 +17,7 @@
                     {% get_detail_userreg item event_pk as userevent_data %}
                     <tr>
                         <td>{{ item.last_name }} {{ item.first_name }}</td>
+                        <td>{{ item.profile.team_alias|default_if_none:"---" }}</td>
                         <td>{{ userevent_data.get_user_status_display }}</td>
                     </tr>
                 {% endfor %}

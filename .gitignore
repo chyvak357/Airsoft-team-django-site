@@ -8,3 +8,5 @@ identifier.sqlite
 test_dump.json
 .restart-app
 airsoft_update.bat
+airsoft_ssh.bat
+call_airsoft_ssh.vbs

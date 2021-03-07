@@ -6,6 +6,7 @@ from users.models import User
 
 register = template.Library()
 
+
 @register.simple_tag()
 def get_event_users(user, event_id):
     """Все пользователи, кто зарегался на игру """

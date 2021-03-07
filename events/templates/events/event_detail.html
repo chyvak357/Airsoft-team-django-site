@@ -12,30 +12,10 @@
                         {% autoescape off %}
                             <p class="card-text">{{ event_item.content | linebreaks }}</p>
                         {% endautoescape %}
-
-                        {% comment %}
-                        <div class="row py-2">
-                            <div class="col-md-3">Начало</div>
-                            <div class="col-md-4">{{ event_item.starting_at }}</div>
-                        </div>
-                        <div class="row py-2">
-                            <div class="col-md-3">Стоимость</div>
-                            <div class="col-md-4">{{ event_item.price|default_if_none:"Бесплатно" }}</div>
-                        </div>
-                        <div class="row py-2">
-                            <div class="col-md-3">Место проведения</div>
-                            <div class="col-md-4">{{ event_item.location_description }}</div>
-                        </div>
-                        <div class="row py-2">
-                            <div class="col-md-3">Окончание регистрации</div>
-                            <div class="col-md-4">{{ event_item.close_reg_at }}</div>
-                        </div>
-                        {% endcomment %}
                     </div>
 
                     <div class="col-md-4 py-2" style="background: #292929">
                         <div class="row py-2">
-                            {#                            <div class="col-md-4">Начало</div>#}
                             <div class="col"><h4>{{ event_item.starting_at|default_if_none:"---" }}</h4></div>
                         </div>
                         <div class="row py-2">
@@ -52,9 +32,8 @@
                         </div>
                         <div class="row py-2">
                             <div class="col">
-                                {#                                <p>{{ user_event }}</p>#}
                                 {% if user_is_registered %}
-                                    {#                                    <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
+{#                                    <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
                                     <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
                                        class="btn btn-primary stretched-link" style="width: 100%">Отменить регистрацию</a>
                                 {% else %}
@@ -67,8 +46,6 @@
                         {% get_event_users user event_item.pk as reg_users %}
                         {% if reg_users.count > 0 %}
                             <a href="{% url 'view_event_users' event_item.pk %}" target="_blank">Список игроков:</a>
-
-{#                            <p>Список игроков:</p>#}
                             <div class="row py-2">
                                 <div class="col">
                                     <div class="row row-cols-3 text-center">
@@ -84,11 +61,11 @@
                                                          alt="Avatar" class="avatar mb-1">
 
                                                 {% endif %}
-                                                {% if reg_user.profile.team_alias %}
-                                                    <p>{{ reg_user.profile.team_alias }}</p>
-                                                {% else %}
+{#                                                {% if reg_user.profile.team_alias %}#}
+{#                                                    <p>{{ reg_user.profile.team_alias }}</p>#}
+{#                                                {% else %}#}
                                                     <p>{{ reg_user.first_name }} {{ reg_user.last_name }}</p>
-                                                {% endif %}
+{#                                                {% endif %}#}
                                             </div>
 
                                         {% endfor %}
