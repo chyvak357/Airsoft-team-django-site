@@ -3,6 +3,7 @@ venv
 __pycache__
 /static
 Не для импорта
+media
 db.sqlite3
 identifier.sqlite
 test_dump.json
