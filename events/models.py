@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+import datetime
+from django.utils import timezone
 
 
 # TODO подумать, как к меро можно закрепить альбом
@@ -32,6 +34,18 @@ class Event(models.Model):
 
     def get_absolute_url(self):
         return reverse('view_events', kwargs={'pk': self.pk})
+
+    @property
+    def reg_is_over(self):
+        if self.close_reg_at is not None:
+            return timezone.now() > self.close_reg_at
+        return False
+
+    @property
+    def event_is_over(self):
+        if self.starting_at is not None:
+            return timezone.now() > self.starting_at
+        return False
 
 
 class UserEvent(models.Model):

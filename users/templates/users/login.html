@@ -33,6 +33,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="next" value="{{ next }}">
                     <button type="submit" class="col btn btn-primary btn-block ">Вход</button>
                 </form>
             </div>
@@ -40,28 +41,3 @@
     </div>
 
 {% endblock %}
-
-То, что для мобильных сверху
-        <div class="card mb-3">
-            <div class="card-header">
-                Категория: <a href="{{ item.category.get_absolute_url }}"> {{ item.category.title }}</a>
-            </div>
-            <div class="d-sm-block d-md-none">
-                {% if item.photo %}
-                    <img src="{{ item.photo.url }}" alt="" width="50%" class="card-img mr-3">
-                {% else %}
-                    <img src="https://picsum.photos/350/235/?blur=2" width="50%" alt="" class="card-img mr-3">
-                {% endif %}
-            </div>
-
-        то, что для обычнх сбоку типа
-            <div class="card-body">
-                <div class="media">
-{#                    <div class="d-sm-none d-sm-block">#}
-{#                        {% if item.photo %}#}
-{#                            <img src="{{ item.photo.url }}" alt="" width="50%" class="card-img mr-3">#}
-{#                        {% else %}#}
-{#                            <img src="https://picsum.photos/350/235/?blur=2" width="50%" alt="" class="card-img mr-3">#}
-{#                        {% endif %}#}
-{#                    </div>#}
-                    <div class="media-body">

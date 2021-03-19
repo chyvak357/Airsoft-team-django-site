@@ -37,16 +37,25 @@ class ViewEvents(DetailView):
     # extra_context = {'latest': Post.objects.all()[:3]}
 
     def get_object(self, queryset=None):
+        # print('-----get_object-----')
+        # print(queryset)
         obj = super(ViewEvents, self).get_object(queryset=queryset)
-        if self.request.user.is_authenticated is False:
-            redirect('home')
-        else:
-            return obj
+        # print(obj)
+        # print('++++++++++++++++')
+        # if self.request.user.is_authenticated is False:
+        #     return redirect('home')
+        # else:
+        return obj
 
     def get_context_data(self, **kwargs):
+        # print('-----get_context_data-----')
+
         context = super().get_context_data(**kwargs)
+        # print(context)
         context['user_is_registered'] = False
         context['user_event'] = None
+        if self.request.user.is_authenticated is False:
+            return context
         user_event = self.request.user.profile.events.filter(event=context['object'])
         if user_event.count() != 0 and user_event[0].user_status == 0:
             context['user_is_registered'] = True

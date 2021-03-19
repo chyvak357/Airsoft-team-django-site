@@ -1,8 +1,7 @@
 # Сайт страйкбольной команды
 
-**skspiral.ru**
+**[skspiral.ru](https://skspiral.ru)**
 
-
-Используеые технологии: 
-   + python django
+Используемые технологии: 
+   + python django3
    + bootstrap

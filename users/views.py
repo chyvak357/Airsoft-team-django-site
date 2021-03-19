@@ -147,21 +147,25 @@ def edit_profile(request):
 #                        'profile_form': profile_form})
 
 
-# class UsersIO:
-
-# #303030
 def user_login(request):
+    next_url = request.GET.get('next', None)
+
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
+        next_url = request.POST.get('next', None)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')
+
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect('home')
         else:
-            return render(request, 'users/login.html', {'form': form})
+            return render(request, 'users/login.html', {'form': form, 'next': next_url})
     else:
         form = UserLoginForm()
-    return render(request, 'users/login.html', {'form': form})
+    return render(request, 'users/login.html', {'form': form, 'next': next_url})
 
 
 def user_logout(request):
