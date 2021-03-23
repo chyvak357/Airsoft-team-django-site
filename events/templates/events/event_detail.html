@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load event_users %}
 
 {% block content %}
+    {{ event_item.pk|json_script:"event_id" }}
+    {% url 'events_register' event_item.pk as events_register_url %}
+    {% url 'events_cancel' event_item.pk user_event.pk as events_cancel_url %}
+    {{ events_register_url|json_script:"events_register_url" }}
+    {{ events_cancel_url|json_script:"events_cancel_url" }}
+
     <div class="container py-sm-3">
         <div class="row justify-content-center text-light my-3">
             <div class="col-md-10 bg-dark my-2 ">
@@ -50,27 +57,33 @@
 
                                 {% else %}
                                     {% if request.user.is_authenticated %}
-                                        {% if user_is_registered %}
+{#                                        {% if user_is_registered %}#}
+                                        {% if user_event.user_status == 0 %}
 
-                                                {# <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
-                                                <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
-                                                   class="reg-refuse btn stretched-link" style="width: 100%">Отменить
-                                                    регистрацию</a>
+                                            {# <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
+{#                                            <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"#}
+{#                                               class="reg-refuse btn stretched-link" style="width: 100%">Отменить#}
+{#                                                регистрацию</a>#}
+
+                                            <a href="javascript:addTextField()"
+                                               class="reg-refuse btn stretched-link"
+                                               style="width: 100%">Отменить
+                                                регистрацию</a>
+
                                         {% else %}
                                             <div class="row py-2">
 
 
-                                                <div class="col-8">
+                                                <div class="{% if user_event == None %}col-8 {% else %} col {% endif %}">
                                                     <a href="{% url 'events_register' event_item.pk %}"
-                                                       class="btn btn-primary stretched-link" style="width: 100%">Я
-                                                        пойду</a>
+                                                       class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
                                                 </div>
-
+                                            {% if user_event == None%}
                                                 <div class="col">
                                                     <a href="javascript:addTextField();"
                                                        class="reg-refuse btn stretched-link" style="width: 100%">Не еду</a>
                                                 </div>
-
+                                            {% endif %}
                                             </div>
                                         {% endif %}
                                     {% endif %}
@@ -130,27 +143,9 @@
         </div>
     </div>
 
-<script>
+{% endblock %}
 
-function addTextField(){
-    let div = document.createElement('div');
-    {#div.className = "alert";#}
-    div.innerHTML = `
-<div class="row-py-2">
-    <div class="col">
-        <div class="form-group">
-            <label for="exampleFormControlTextarea1">Указание причины</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-        </div>
-    </div>
-</div>
-`;
-    document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > div:nth-child(5)").after(div);
-    {#document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > a").append(div);#}
 
-    return false;
-}
-    // setTimeout(() => div.remove(), 1000);
-
-</script>
+{% block javascript %}
+    <script src="{% static 'js/events/events_comment.js' %}"></script>
 {% endblock %}

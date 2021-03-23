@@ -3,6 +3,7 @@ from django.shortcuts import redirect, reverse, render
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+import json
 
 from .models import Event, UserEvent
 from users.models import User
@@ -48,17 +49,19 @@ class ViewEvents(DetailView):
         return obj
 
     def get_context_data(self, **kwargs):
-        # print('-----get_context_data-----')
+        print('-----get_context_data-----')
 
         context = super().get_context_data(**kwargs)
-        # print(context)
+        print(context['object'])
         context['user_is_registered'] = False
         context['user_event'] = None
         if self.request.user.is_authenticated is False:
             return context
         user_event = self.request.user.profile.events.filter(event=context['object'])
-        if user_event.count() != 0 and user_event[0].user_status == 0:
-            context['user_is_registered'] = True
+        # print(user_event[0])
+        # if user_event.count() != 0 and user_event[0].user_status == 0:
+        if user_event.count() != 0:
+            # context['user_is_registered'] = True
             context['user_event'] = user_event[0]
         return context
 
@@ -88,8 +91,28 @@ class ViewEvents(DetailView):
 
 
 def register_event(request, *args, **kwargs):
-    """ Для регистрации на игру """
+    """ Для регистрации на игру
 
+        USER_STATUSES = (
+        (0, 'Зарегистрировался'),
+        (1, 'Отменил регистрацию'),  # Ранее да, но потом отказался. Указал причину
+        (2, 'Отказался'),            # С указанием причины
+        (3, 'Игнорировал'),          # Ставится по умолчанию для тех, кто не голосовал после завершения меро
+        (4, 'Не явился'),            # Зареган, но не приехал. Проставляется командиром
+    )
+    """
+
+    print('request: ', request)
+    print('args: ', args)
+    print('kwargs: ', kwargs)
+    user_comment = None
+    if request.method == 'POST':
+        try:
+            user_comment = json.loads(request.body).get('user_comment', None)
+        except Exception as err:
+            print(err)
+        # return HttpResponse(200)
+    print(user_comment)
     model = UserEvent
     pk = kwargs.get('pk_event')
 
@@ -97,19 +120,40 @@ def register_event(request, *args, **kwargs):
 
     if created:
         obj.user.add(request.user.profile)
+        obj.user_status = 2 if request.method == 'POST' else 0
+        obj.user_comment = user_comment
+        obj.save()
         # request.user.profile.events.add(obj)
         # request.user.profile.save()
     else:
-        # уже был зареган, но отказывался
-        obj.user_status = 0
+        # Сначала отказался, а потом передумал
+        obj.user_status = 2 if request.method == 'POST' else 0
+        obj.user_comment = user_comment
         obj.save()
     return redirect('view_events', pk)
 
 
 # При отмене регистрации обьект с регистрацией не удаляется, а изменяется статус user_status на 1 (отказался)
 def register_cancel(request, *args, **kwargs):
+    print('request: ', request)
+    print('args: ', args)
+    print('kwargs: ', kwargs)
+
+    user_comment = None
+
+    if request.method == 'POST':
+        try:
+            user_comment = json.loads(request.body).get('user_comment', None)
+        except Exception as err:
+            print(err)
+        # return HttpResponse(200)
+    print(user_comment)
+
+
     user_event = UserEvent.objects.get(pk=kwargs.get('pk_reg'))
-    user_event.user_status = 1
+    # user_event.user_status = 1  # отменил регистрацию
+    user_event.user_status = 2  # отказался
+    user_event.user_comment = user_comment
     user_event.save()
     return redirect('view_events', pk=kwargs.get('pk_event'))
 
