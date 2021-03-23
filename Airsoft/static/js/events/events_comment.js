@@ -15,9 +15,13 @@ function getCookie(cname) {
 }
 
 
+let comment_div = document.createElement('comment_div');
 function addTextField() {
+    /* Добавляет блок с полем для ввода и кнопку на отправку ответа */
 
-    let comment_div = document.createElement('comment_div');
+    if (comment_div.innerHTML !== ''){
+        return false;
+    }
     const event_id = JSON.parse(document.getElementById('event_id').textContent);
     const event_reg = JSON.parse(document.getElementById('events_register_url').textContent);
     // alert()
@@ -25,14 +29,14 @@ function addTextField() {
 <div class="row-py-2">
     <div class="col">
         <div class="form-group">
-            <label for="fromControlTextarea1">Указание причины</label>
+            <label for="fromControlTextarea1">Описание причины</label>
+            <div class="invalid-feedback" style="display: none">Ответ не может быть пустым!</div>
             <textarea class="form-control" id="fromControlTextarea1" rows="3"></textarea>
         </div>
     </div>
 </div>
 <div class="row py-2">
     <div class="col">
-<!--        <a href="javascript:showInputMassage();"-->
         <a href="javascript:sendCancelFormData();"
            class="btn btn-primary stretched-link" style="width: 100%">Отправить</a>
     </div>
@@ -43,24 +47,20 @@ function addTextField() {
     return false;
 }
 
-function showInputMassage() {
-    let form_textarea = document.getElementById("fromControlTextarea1");
-    alert(form_textarea.value);
-    return false;
-}
 
 async function sendCancelFormData(){
+    /* Отправляет даннны из формы на сервер */
+
     const csrftoken = getCookie('csrftoken');
-
-    // if (act_type === 'reg'){
-
-    // } else if (act_type) ==
     const event_reg = JSON.parse(document.getElementById('events_register_url').textContent);
-
-
     let form_textarea = document.getElementById("fromControlTextarea1");
-    // let promise = fetch(event_reg);
-    console.log(JSON.stringify({user_comment: form_textarea.value}));
+
+    console.log(form_textarea.value.length)
+    if ( form_textarea.value.length < 5){
+        comment_div = document.getElementsByClassName('invalid-feedback')[0];
+        comment_div.style.display = 'block';
+        return false;
+    }
 
     let promise = await fetch(event_reg, {
         method: 'POST',
@@ -73,20 +73,8 @@ async function sendCancelFormData(){
         if (response.status === 200) {
             window.location.reload();
         } else {
-            alert('Не удалось передать данные')
+            alert('Не удалось передать данные');
             window.location.reload();
         }
     });
-}
-
-function testData(){
-    // let chat = document.querySelector("#chat");
-    // let input = document.querySelector("#message-input");
-    // let btnSubmit = document.querySelector("#btn-submit");
-    const event_id = JSON.parse(document.getElementById('event_id').textContent);
-    // const user_id = JSON.parse(document.getElementById('user_id').textContent);
-    // const username = JSON.parse(document.getElementById('username').textContent);
-    alert(event_id)
-
-    return false;
 }
