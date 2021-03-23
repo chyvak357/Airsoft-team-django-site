@@ -169,7 +169,20 @@ a.custom-card:hover {
     border-color: #993247;
 }
 
-.btn.reg-refuse:hover :active :focus{
+.btn.reg-refuse:hover :active :focus {
+    background-color: #79293c;
+    border-color: #79293c;
+}
+.btn.reg-refuse:hover :active :focus {
+    background-color: #79293c;
+    border-color: #79293c;
+}
+.reg-refuse:active {
+    background-color: #642332;
+    border-color: #642332;
+}
+
+.reg-refuse:hover{
     background-color: #79293c;
     border-color: #79293c;
 }
