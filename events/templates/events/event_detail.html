@@ -36,24 +36,61 @@
                             <div class="col">{{ event_item.close_reg_at|default_if_none:"---" }}</div>
                         </div>
                         <div class="row py-2">
+
                             <div class="col">
 
+                                {% comment %} Блок с кнопкой регистрации на игру  {% endcomment %}
+
                                 {% if  event_item.reg_is_over or event_item.event_is_over %}
-                                    <div class="btn btn-primary stretched-link" style="width: 100%; background-color: #6f747e; border-color: #6f747e">Регистрация завершена</div>
+
+                                        <div class="reg-closed btn stretched-link "
+                                             style="width: 100%;">
+                                            Регистрация завершена
+                                        </div>
+
                                 {% else %}
                                     {% if request.user.is_authenticated %}
                                         {% if user_is_registered %}
-        {#                                    <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
-                                            <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
-                                               class="btn btn-primary stretched-link" style="width: 100%">Отменить регистрацию</a>
+
+                                                {# <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
+                                                <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"
+                                                   class="reg-refuse btn btn-primary stretched-link" style="width: 100%">Отменить
+                                                    регистрацию</a>
                                         {% else %}
-                                            <a href="{% url 'events_register' event_item.pk %}"
-                                               class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
+                                            <div class="row py-2">
+
+
+                                                <div class="col-8">
+                                                    <a href="{% url 'events_register' event_item.pk %}"
+                                                       class="btn btn-primary stretched-link" style="width: 100%">Я
+                                                        пойду</a>
+                                                </div>
+
+                                                <div class="col">
+                                                    <a href="javascript:addTextField();"
+                                                       class="reg-refuse btn stretched-link" style="width: 100%">Не еду</a>
+                                                </div>
+
+                                            </div>
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
                             </div>
+
+
                         </div>
+
+{#                        <div class="row-py-2">#}
+{#                            <div class="col">#}
+{#                                <div class="form-group">#}
+{#                                    <label for="exampleFormControlTextarea1">Указание причины</label>#}
+{#                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+
+
+                        {% comment %} Блок с зарегистрированными пользователями {% endcomment %}
 
                         {% get_event_users user event_item.pk as reg_users %}
                         {% if reg_users.count > 0 %}
@@ -93,5 +130,27 @@
         </div>
     </div>
 
+<script>
 
+function addTextField(){
+    let div = document.createElement('div');
+    {#div.className = "alert";#}
+    div.innerHTML = `
+<div class="row-py-2">
+    <div class="col">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Указание причины</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+    </div>
+</div>
+`;
+    document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > div:nth-child(5)").after(div);
+    {#document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > a").append(div);#}
+
+    return false;
+}
+    // setTimeout(() => div.remove(), 1000);
+
+</script>
 {% endblock %}
