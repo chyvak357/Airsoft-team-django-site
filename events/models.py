@@ -48,6 +48,7 @@ class Event(models.Model):
         return False
 
 
+
 class UserEvent(models.Model):
     """
     Связывает игрока с мероприятием
@@ -93,3 +94,6 @@ class UserEvent(models.Model):
     class Meta:
         verbose_name = 'Пользователь-Мероприятие'
         verbose_name_plural = 'Пользователь-Мероприятия'
+
+    # @classmethod
+    # def userstatus_choise(self, ):

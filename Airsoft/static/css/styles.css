@@ -1,6 +1,6 @@
 a.custom-card,
 a.custom-card:hover {
-  color: inherit;
+    color: inherit;
 }
 
 .avatar {
@@ -11,59 +11,46 @@ a.custom-card:hover {
 }
 
 .central_block {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  max-width: 1080px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
 }
 
 .container.main_slider {
-  height: 300px;
+    height: 300px;
 }
 
-/*#carouser_mainpage {*/
-/*  height: 100px;*/
-/*}*/
-
 #carousel_mainpage {
-  /*height: 500px;*/
-  /*max-height: 720px;*/
-  max-height: 500px;
-  max-width: 1080px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 30px;
+    /*height: 500px;*/
+    /*max-height: 720px;*/
+    max-height: 500px;
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
 }
 
 #carousel-1 {
-  height: inherit;
+    height: inherit;
 }
 
 #car_inner {
-  height: inherit;
+    height: inherit;
 }
 
 #main_cards {
-  max-width: 1080px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 30px;
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
 }
 
-
-
-
-
-
-/*body{margin-top:20px;*/
-/*color: #bcd0f7;*/
-/*    background: #1A233A;*/
-/*}*/
-.account-settings-container{
-  margin-bottom: 15px;
-  margin-top: 15px;
+.account-settings-container {
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .account-settings .user-profile {
@@ -71,9 +58,11 @@ a.custom-card:hover {
     padding-bottom: 1rem;
     text-align: center;
 }
+
 .account-settings .user-profile .user-avatar {
     margin: 0 0 1rem 0;
 }
+
 .account-settings .user-profile .user-avatar img {
     width: 90px;
     height: 90px;
@@ -81,19 +70,23 @@ a.custom-card:hover {
     -moz-border-radius: 100px;
     border-radius: 100px;
 }
+
 .account-settings .user-profile h5.user-name {
     margin: 0 0 0.5rem 0;
 }
+
 .account-settings .user-profile h6.user-email {
     margin: 0;
     font-size: 0.8rem;
     font-weight: 400;
 }
+
 .account-settings .about {
     margin: 1rem 0 0 0;
     font-size: 0.8rem;
     text-align: center;
 }
+
 .card {
     background: #272E48;
     -webkit-border-radius: 5px;
@@ -102,6 +95,7 @@ a.custom-card:hover {
     border: 0;
     margin-bottom: 1rem;
 }
+
 .form-control {
     border: 1px solid #596280;
     -webkit-border-radius: 2px;
@@ -114,13 +108,11 @@ a.custom-card:hover {
 
 
 .container.main_slider {
-  height: 300;
+    height: 300;
 }
 
 
-
-.pagination > li > a
-{
+.pagination > li > a {
     background-color: #3c3c3c;
     color: #90b4bd;
 }
@@ -128,33 +120,25 @@ a.custom-card:hover {
 .pagination > li > a:focus,
 .pagination > li > a:hover,
 .pagination > li > span:focus,
-.pagination > li > span:hover
-{
-    /*color: #5a5a5a;*/
+.pagination > li > span:hover {
     background-color: #5a5a5a;
-    /*border: solid 1px #5a5a5a !Important;*/
-    /*border-color: #ddd;*/
 }
 
-.pagination > .active > a
-{
+.pagination > .active > a {
     color: white;
     background-color: #5a5a5a !Important;
-    /*border: solid 1px #5a5a5a !Important;*/
 }
 
-.pagination > .active > a:hover
-{
+.pagination > .active > a:hover {
     background-color: #5a5a5a !Important;
-    /*border: solid 1px #eee;*/
 }
 
 .alert {
-  padding: 15px;
-  border: 1px solid #d6e9c6;
-  border-radius: 4px;
-  color: #3c763d;
-  background-color: #dff0d8;
+    padding: 15px;
+    border: 1px solid #d6e9c6;
+    border-radius: 4px;
+    color: #3c763d;
+    background-color: #dff0d8;
 }
 
 
@@ -173,16 +157,18 @@ a.custom-card:hover {
     background-color: #79293c;
     border-color: #79293c;
 }
+
 .btn.reg-refuse:hover :active :focus {
     background-color: #79293c;
     border-color: #79293c;
 }
+
 .reg-refuse:active {
     background-color: #642332;
     border-color: #642332;
 }
 
-.reg-refuse:hover{
+.reg-refuse:hover {
     background-color: #79293c;
     border-color: #79293c;
 }

@@ -43,27 +43,27 @@
                             <div class="col">{{ event_item.close_reg_at|default_if_none:"---" }}</div>
                         </div>
                         <div class="row py-2">
+                            <div class="col-md-4">Участвуют</div>
+                            <div class="col">{{ users_count }} игроков</div>
+                        </div>
+                        <div class="row py-2">
 
+
+
+                            {% comment %} Блок с кнопкой регистрации на игру  {% endcomment %}
                             <div class="col">
 
-                                {% comment %} Блок с кнопкой регистрации на игру  {% endcomment %}
 
                                 {% if  event_item.reg_is_over or event_item.event_is_over %}
 
-                                        <div class="reg-closed btn stretched-link "
-                                             style="width: 100%;">
-                                            Регистрация завершена
-                                        </div>
+                                    <div class="reg-closed btn stretched-link "
+                                         style="width: 100%;">
+                                        Регистрация завершена
+                                    </div>
 
                                 {% else %}
                                     {% if request.user.is_authenticated %}
-{#                                        {% if user_is_registered %}#}
                                         {% if user_event.user_status == 0 %}
-
-                                            {# <a href="{% url 'events_register' event_item.pk %}" class="btn btn-primary stretched-link mb-2" style="width: 100%">Статус регистрации</a>#}
-{#                                            <a href="{% url 'events_cancel' event_item.pk user_event.pk %}"#}
-{#                                               class="reg-refuse btn stretched-link" style="width: 100%">Отменить#}
-{#                                                регистрацию</a>#}
 
                                             <a href="javascript:addTextField()"
                                                class="reg-refuse btn stretched-link"
@@ -71,19 +71,18 @@
                                                 регистрацию</a>
 
                                         {% else %}
+
                                             <div class="row py-2">
-
-
                                                 <div class="{% if user_event == None %}col-8 {% else %} col {% endif %}">
                                                     <a href="{% url 'events_register' event_item.pk %}"
                                                        class="btn btn-primary stretched-link" style="width: 100%">Я пойду</a>
                                                 </div>
-                                            {% if user_event == None%}
-                                                <div class="col">
-                                                    <a href="javascript:addTextField();"
-                                                       class="reg-refuse btn stretched-link" style="width: 100%">Не еду</a>
-                                                </div>
-                                            {% endif %}
+                                                {% if user_event == None %}
+                                                    <div class="col">
+                                                        <a href="javascript:addTextField();"
+                                                           class="reg-refuse btn stretched-link" style="width: 100%">Не еду</a>
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                         {% endif %}
                                     {% endif %}

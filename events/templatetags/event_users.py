@@ -11,10 +11,6 @@ register = template.Library()
 def get_event_users(user, event_id):
     """Все пользователи, кто зарегался на игру """
     users_list = []
-    # print('--------')
-    # print(user)
-    # print(event_id)
-    # print('--------')
     event_registrations = UserEvent.objects.filter(event_id=event_id, user_status=0)
     users_list = User.objects.filter(profile__events__in=event_registrations)
     return users_list

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+    {% verbatim %}
+
+    <!-- Точка входа для отрисовки -->
+    <div class="container py-sm-3">
+
+        <div id="main-app">
+
+            <h2>Список участников</h2>
+
+            <!--
+            <li v-for="i in searchColumns">
+                {{ i }}
+            </li>
+-->
+            <div class="container py-sm-3">
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button class="btn btn-primary">Поиск</button>
+                        </div>
+                        <div class="col-md">
+                            <input v-model="searchQuery" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="awards_table">
+                <div class="table table-responsive" style="overflow-x:hidden;">
+                    <table class="table mb-0">
+                        <thead>
+                        <tr>
+                            <th v-for="head in columnsHeaders" style="color: #0f74a8"
+                                @click="sortParam.column=head; sortParam.order=(sortParam.order * -1)"
+                                :class="{ active: sortParam.column == head }">
+
+                                {{ head.displayName }}
+                                <span class="arrow" :class="sortParam.order > 0 ? 'asc' : 'dsc'"></span>
+
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr v-for="row in columnsData">
+                            <td v-for="header in columnsHeaders">
+                                {{ row[header.name] }}
+                                </td>
+                            <!--
+                            <td>{{ user.user_name }}</td>
+                            <td>{{ user.user_team_alias }}</td>
+                            <td>{{ user.user_status }}</td>
+                            -->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    {% endverbatim %}
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="{% static 'js/events/event_users_table2.js' %}"></script>
+{% endblock %}
+
+

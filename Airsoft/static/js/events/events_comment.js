@@ -24,7 +24,6 @@ function addTextField() {
     }
     const event_id = JSON.parse(document.getElementById('event_id').textContent);
     const event_reg = JSON.parse(document.getElementById('events_register_url').textContent);
-    // alert()
     comment_div.innerHTML = `
 <div class="row-py-2">
     <div class="col">
@@ -43,7 +42,7 @@ function addTextField() {
 </div>
 `;
 
-    document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > div:nth-child(5)").after(comment_div);
+    document.querySelector("body > div.container.py-sm-3 > div > div > div > div.col-md-4.py-2 > div:nth-child(6)").after(comment_div);
     return false;
 }
 

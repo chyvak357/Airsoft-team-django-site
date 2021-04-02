@@ -1,9 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, reverse, render
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
-from django.http import HttpResponse
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, View
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+
+from django.http import JsonResponse
+from django.core import serializers
+
 import json
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 from .models import Event, UserEvent
 from users.models import User
@@ -35,33 +41,22 @@ class ViewEvents(DetailView):
 
     model = Event
     context_object_name = 'event_item'
-    # extra_context = {'latest': Post.objects.all()[:3]}
 
     def get_object(self, queryset=None):
-        # print('-----get_object-----')
-        # print(queryset)
         obj = super(ViewEvents, self).get_object(queryset=queryset)
-        # print(obj)
-        # print('++++++++++++++++')
-        # if self.request.user.is_authenticated is False:
-        #     return redirect('home')
-        # else:
         return obj
 
     def get_context_data(self, **kwargs):
-        print('-----get_context_data-----')
-
         context = super().get_context_data(**kwargs)
-        print(context['object'])
         context['user_is_registered'] = False
         context['user_event'] = None
+        context['users_count'] = UserEvent.objects.filter(event=context['object'], user_status=0).count()
+
         if self.request.user.is_authenticated is False:
             return context
+
         user_event = self.request.user.profile.events.filter(event=context['object'])
-        # print(user_event[0])
-        # if user_event.count() != 0 and user_event[0].user_status == 0:
         if user_event.count() != 0:
-            # context['user_is_registered'] = True
             context['user_event'] = user_event[0]
         return context
 
@@ -102,17 +97,12 @@ def register_event(request, *args, **kwargs):
     )
     """
 
-    print('request: ', request)
-    print('args: ', args)
-    print('kwargs: ', kwargs)
     user_comment = None
     if request.method == 'POST':
         try:
             user_comment = json.loads(request.body).get('user_comment', None)
         except Exception as err:
-            print(err)
-        # return HttpResponse(200)
-    print(user_comment)
+            user_comment = 'Server side error'
     model = UserEvent
     pk = kwargs.get('pk_event')
 
@@ -133,11 +123,8 @@ def register_event(request, *args, **kwargs):
     return redirect('view_events', pk)
 
 
-# При отмене регистрации обьект с регистрацией не удаляется, а изменяется статус user_status на 1 (отказался)
+# При отмене регистрации обьект с регистрацией не удаляется, а изменяется статус user_status на 1 или 2 (отказался)
 def register_cancel(request, *args, **kwargs):
-    print('request: ', request)
-    print('args: ', args)
-    print('kwargs: ', kwargs)
 
     user_comment = None
 
@@ -145,13 +132,10 @@ def register_cancel(request, *args, **kwargs):
         try:
             user_comment = json.loads(request.body).get('user_comment', None)
         except Exception as err:
-            print(err)
-        # return HttpResponse(200)
-    print(user_comment)
+            user_comment = 'Server side error'
 
 
     user_event = UserEvent.objects.get(pk=kwargs.get('pk_reg'))
-    # user_event.user_status = 1  # отменил регистрацию
     user_event.user_status = 2  # отказался
     user_event.user_comment = user_comment
     user_event.save()
@@ -179,6 +163,7 @@ def register_cancel(request, *args, **kwargs):
 
 # Подходит для получения списка данных
 class EventUsersList(ListView):
+    """ Таблица с теми, кто зарегался на игру"""
     model = UserEvent
     allow_empty = False  # кинет 404 при попытке отобразить пустой список
     template_name = 'events/users_on_event.html'
@@ -186,13 +171,6 @@ class EventUsersList(ListView):
 #     Доп данные из context, но не оч использовать его
 # Что бы получить данные, то нужно теперь в urls использовать
 # AwardsTest.as_view()
-
-    # переопределилил метод для добавления данных контекста
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Просто пример чего-то там'
-        context['event_pk'] = self.kwargs.get('pk')
-        return context
 
     # Изменяем запрос на получение данных
     def get_queryset(self):
@@ -204,3 +182,78 @@ class EventUsersList(ListView):
         users_list = User.objects.filter(profile__events__in=event_registrations)
         return users_list
 
+    # переопределилил метод для добавления данных контекста
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Просто пример чего-то там'
+        context['event_pk'] = self.kwargs.get('pk')
+        return context
+
+
+class EventUsersListTest(LoginRequiredMixin, View):
+    """ Тестовый контролер для полоучения табличных данных формата json """
+    model = UserEvent
+    user_statuses = dict((k, v) for k, v in model.USER_STATUSES)
+
+    def get(self, request, pk):
+        response = {}
+        # pk - индекс мероприятия
+        # data = self.model.objects.filter(event_id=pk)
+        data = list(self.model.objects.filter(event_id=pk).values('user_status', 'user_comment', 'user__user', 'user__user__first_name', 'user__user__last_name', 'user__team_alias'))
+
+        for row in data:
+            row['user_name'] = '{} {}'.format(row['user__user__last_name'], row['user__user__first_name'])        # qs_json = serializers.serialize('json', data)  # нельзя использовать, есл указывать какие поля нужно получить
+            row['user_pk'] = row.pop('user__user')
+            row['user_status_code'] = row['user_status']
+            row['user_status'] = self.user_statuses.get(row['user_status'], 'Error')
+            row['user_team_alias'] = row['user__team_alias']
+
+            row.pop('user__team_alias')
+            row.pop('user__user__first_name')
+            row.pop('user__user__last_name')
+
+        response['Data'] = data
+        response['Columns'] = [
+            {'name': 'user_name',
+             'displayName': 'Пользователь',
+             'search': 1,
+             'sort': 1,
+             'width': ''
+             },
+            {'name': 'user_team_alias',
+             'displayName': 'Позывной',
+             'search': 1,
+             'sort': 1,
+             'width': ''
+
+             },
+            {'name': 'user_status',
+             'displayName': 'Статус регистрации',
+             'search': 0,
+             'sort': 1,
+             'width': ''
+             }]
+
+
+        qs_json = json.dumps(response, cls=DjangoJSONEncoder)
+        return HttpResponse(qs_json, content_type='application/json')
+
+
+
+def test(request):
+    return render(request, 'events/test_table_copy.html', {})
+
+
+def test_vue(request):
+    print(request)
+    return render(request, 'events/test_table2.html', {})
+    # return HttpResponse('test')
+
+
+    # "user_status": "\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043b\u0441\u044f",
+    # "user_comment": null,
+    # "user__user": 25,
+    # "user_name": "\u0421\u0430\u0432\u0435\u043d\u043a\u043e \u0410\u043d\u0442\u043e\u043d\u0438\u0439",
+    # "user_pk": 25,
+    # "user_status_code": 0,
+    # "user_team_alias": "\u0411\u0430\u043d\u0434\u0435\u0440\u043e\u0441"}
