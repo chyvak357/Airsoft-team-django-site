@@ -144,7 +144,7 @@ def register_cancel(request, *args, **kwargs):
 
 # class EventUsersList(ListView):
 #     model = UserEvent
-#     template_name = 'events/users_on_event.html'
+#     template_name = 'events/users_on_event_static.html'
 #     # allow_empty = False
 #
 #     def get_context_data(self, *, object_list=None, **kwargs):
@@ -162,11 +162,39 @@ def register_cancel(request, *args, **kwargs):
 
 
 # Подходит для получения списка данных
+# class EventUsersList(ListView):
+#     """ Таблица с теми, кто зарегался на игру"""
+#     model = UserEvent
+#     allow_empty = False  # кинет 404 при попытке отобразить пустой список
+#     template_name = 'events/users_on_event_static.html'
+#     extra_context = {}
+# #     Доп данные из context, но не оч использовать его
+# # Что бы получить данные, то нужно теперь в urls использовать
+# # AwardsTest.as_view()
+#
+#     # Изменяем запрос на получение данных
+#     def get_queryset(self):
+#         pk = self.kwargs.get('pk')
+#         # Номер текущей игры
+#         users_list = []
+#
+#         event_registrations = UserEvent.objects.filter(event_id=pk, user_status=0)
+#         users_list = User.objects.filter(profile__events__in=event_registrations)
+#         return users_list
+#
+#     # переопределилил метод для добавления данных контекста
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = 'Просто пример чего-то там'
+#         context['event_pk'] = self.kwargs.get('pk')
+#         return context
+
+
 class EventUsersList(ListView):
     """ Таблица с теми, кто зарегался на игру"""
     model = UserEvent
     allow_empty = False  # кинет 404 при попытке отобразить пустой список
-    template_name = 'events/users_on_event.html'
+    template_name = 'events/users_on_event_react.html'
     extra_context = {}
 #     Доп данные из context, но не оч использовать его
 # Что бы получить данные, то нужно теперь в urls использовать
@@ -240,20 +268,5 @@ class EventUsersListTest(LoginRequiredMixin, View):
 
 
 
-def test(request):
-    return render(request, 'events/test_table_copy.html', {})
-
-
-def test_vue(request):
-    print(request)
-    return render(request, 'events/test_table2.html', {})
-    # return HttpResponse('test')
-
-
-    # "user_status": "\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043b\u0441\u044f",
-    # "user_comment": null,
-    # "user__user": 25,
-    # "user_name": "\u0421\u0430\u0432\u0435\u043d\u043a\u043e \u0410\u043d\u0442\u043e\u043d\u0438\u0439",
-    # "user_pk": 25,
-    # "user_status_code": 0,
-    # "user_team_alias": "\u0411\u0430\u043d\u0434\u0435\u0440\u043e\u0441"}
+# def test(request):
+#     return render(request, 'events/test_table_copy.html', {})

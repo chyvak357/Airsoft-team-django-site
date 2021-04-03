@@ -4,6 +4,8 @@
 
 
 {% block content %}
+    {% url 'view_event_users_data' event_pk as dataURL %}
+    {{ dataURL|json_script:"dataURL" }}
 
     {% verbatim %}
 
@@ -79,7 +81,7 @@
 {% block javascript %}
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
-    <script src="{% static 'js/events/event_users_table2.js' %}"></script>
+    <script src="{% static 'js/events/users_table.js' %}"></script>
 {% endblock %}
 
 

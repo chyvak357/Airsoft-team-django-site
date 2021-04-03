@@ -19,7 +19,7 @@ let app = new Vue({
 
         /* Данные приходят от сервера. Поле "Data" */
         // columnsData: [],
-        columnsDataROW: []
+        columnsDataROW: [],
         // {
         //     "user_status": 0,
         //     "user_comment": null,
@@ -27,8 +27,10 @@ let app = new Vue({
         //     "user_name": "\u0421\u0430\u0432\u0435\u043d\u043a\u043e \u0410\u043d\u0442\u043e\u043d\u0438\u0439"
         //     "user_team_alias": "\u0421\u0430\u0432\u0435\u043d\u043a\u043e \u0410\u043d\u0442\u043e\u043d\u0438\u0439"
         // },
+        dataURL: '',
     },
     created: function () {
+        this.getDataURL();
         this.fetchData();
     },
 
@@ -98,15 +100,24 @@ let app = new Vue({
 
     methods: {
         /* Получение данных с сервера */
-        // TODO доработать, что бы маршрут для данных давал шаблонизатоор django
         fetchData: function () {
             let self = this;
-            this.$http.get('http://127.0.0.1:8000/events/event/6/users-list')
+            this.$http.get(self.dataURL)
                 .then(function (response) {
                     // self.columnsData = response.data.Data;
                     self.columnsDataROW = response.data.Data;
                     self.columnsHeaders = response.data.Columns;
                 });
+        },
+
+        /* Получение ссылки из шаблона на данные */
+        getDataURL: function (){
+            let self = this;
+
+            // const event_reg = JSON.parse(document.getElementById('events_register_url').textContent);
+            console.log(document.getElementById('dataURL'))
+            self.dataURL = JSON.parse(document.getElementById('dataURL').textContent);
+            console.log(self.dataURL);
         }
     }
 });
