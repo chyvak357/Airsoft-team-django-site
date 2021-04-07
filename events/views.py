@@ -10,14 +10,16 @@ from django.core import serializers
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
-
 from .models import Event, UserEvent
 from users.models import User
+
 
 # from django.contrib.auth.forms import UserCreationForm если бы не юзали свою форму
 
 
 class HomeEvents(ListView, LoginRequiredMixin):
+    """ Для просмотра списка игр """
+
     model = Event
     template_name = 'events/events_list.html'
     context_object_name = 'events'
@@ -32,7 +34,8 @@ class HomeEvents(ListView, LoginRequiredMixin):
         if 'user-events' in str(self.request):
             # Только те, на которые зареган текущий пользователь
 
-            return Event.objects.filter(pk__in=self.request.user.profile.events.all().values_list('event', flat=True), userevent__user_status=0, userevent__user=self.request.user.profile)
+            return Event.objects.filter(pk__in=self.request.user.profile.events.all().values_list('event', flat=True),
+                                        userevent__user_status=0, userevent__user=self.request.user.profile)
         return Event.objects.filter(is_published=True)
 
 
@@ -44,6 +47,7 @@ class ViewEvents(DetailView):
 
     def get_object(self, queryset=None):
         obj = super(ViewEvents, self).get_object(queryset=queryset)
+        self.set_missed(obj)
         return obj
 
     def get_context_data(self, **kwargs):
@@ -59,6 +63,29 @@ class ViewEvents(DetailView):
         if user_event.count() != 0:
             context['user_event'] = user_event[0]
         return context
+
+    def set_missed(self, event_obj):
+        """ Задать неявку для всех остальных пользователей """
+        # 0) Проверить, текущая дата больше даты окончания мероприятия
+        # 1) Получить список пользователей, которые не зарегались сюда
+        # 2) Пройтись по этому списку и создать для каждого юзер-ивент запись
+        # 2.2) Сохранять
+
+        # только те, что уже имеют обьект регистрации на игру
+        if event_obj.event_is_over:
+            pass
+
+        event_registrations = UserEvent.objects.filter(event=event_obj)
+        users_list = User.objects.filter(profile__events__in=event_registrations)
+
+        truants = User.objects.all().difference(users_list)
+
+        user_comment = "Автопрогул. Работа сервера"
+        for user in truants:
+            tmp = UserEvent.objects.create(event=event_obj,
+                                           user_status=3,
+                                           user_comment=user_comment)
+            tmp.user.add(user.profile)
 
 
 # https://coderoad.ru/47939283/django-CBV-generic-DetailView-redirect-%D0%B5%D1%81%D0%BB%D0%B8-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-%D0%BD%D0%B5-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82
@@ -96,16 +123,16 @@ def register_event(request, *args, **kwargs):
         (4, 'Не явился'),            # Зареган, но не приехал. Проставляется командиром
     )
     """
-
+    model = UserEvent
     user_comment = None
+
     if request.method == 'POST':
         try:
             user_comment = json.loads(request.body).get('user_comment', None)
         except Exception as err:
             user_comment = 'Server side error'
-    model = UserEvent
-    pk = kwargs.get('pk_event')
 
+    pk = kwargs.get('pk_event')
     obj, created = model.objects.filter(event_id=pk, user=request.user.profile).get_or_create(event_id=pk)
 
     if created:
@@ -113,8 +140,6 @@ def register_event(request, *args, **kwargs):
         obj.user_status = 2 if request.method == 'POST' else 0
         obj.user_comment = user_comment
         obj.save()
-        # request.user.profile.events.add(obj)
-        # request.user.profile.save()
     else:
         # Сначала отказался, а потом передумал
         obj.user_status = 2 if request.method == 'POST' else 0
@@ -125,7 +150,6 @@ def register_event(request, *args, **kwargs):
 
 # При отмене регистрации обьект с регистрацией не удаляется, а изменяется статус user_status на 1 или 2 (отказался)
 def register_cancel(request, *args, **kwargs):
-
     user_comment = None
 
     if request.method == 'POST':
@@ -133,7 +157,6 @@ def register_cancel(request, *args, **kwargs):
             user_comment = json.loads(request.body).get('user_comment', None)
         except Exception as err:
             user_comment = 'Server side error'
-
 
     user_event = UserEvent.objects.get(pk=kwargs.get('pk_reg'))
     user_event.user_status = 2  # отказался
@@ -196,9 +219,10 @@ class EventUsersList(ListView):
     allow_empty = False  # кинет 404 при попытке отобразить пустой список
     template_name = 'events/users_on_event_react.html'
     extra_context = {}
-#     Доп данные из context, но не оч использовать его
-# Что бы получить данные, то нужно теперь в urls использовать
-# AwardsTest.as_view()
+
+    #     Доп данные из context, но не оч использовать его
+    # Что бы получить данные, то нужно теперь в urls использовать
+    # AwardsTest.as_view()
 
     # Изменяем запрос на получение данных
     def get_queryset(self):
@@ -227,10 +251,19 @@ class EventUsersListTest(LoginRequiredMixin, View):
         response = {}
         # pk - индекс мероприятия
         # data = self.model.objects.filter(event_id=pk)
-        data = list(self.model.objects.filter(event_id=pk).values('user_status', 'user_comment', 'user__user', 'user__user__first_name', 'user__user__last_name', 'user__team_alias'))
+        # user = auth.get_user(request)
+        user_groups = request.user.groups.values_list('name', flat=True)
+        is_leader = 'GroupLeaders' in user_groups
+
+        data = list(self.model.objects.filter(event_id=pk).values('user_status', 'user_comment', 'user__user',
+                                                                  'user__user__first_name', 'user__user__last_name',
+                                                                  'user__team_alias'))
 
         for row in data:
-            row['user_name'] = '{} {}'.format(row['user__user__last_name'], row['user__user__first_name'])        # qs_json = serializers.serialize('json', data)  # нельзя использовать, есл указывать какие поля нужно получить
+            if not is_leader and row['user_status'] != 0:
+                continue
+            row['user_name'] = '{} {}'.format(row['user__user__last_name'], row[
+                'user__user__first_name'])  # qs_json = serializers.serialize('json', data)  # нельзя использовать, есл указывать какие поля нужно получить
             row['user_pk'] = row.pop('user__user')
             row['user_status_code'] = row['user_status']
             row['user_status'] = self.user_statuses.get(row['user_status'], 'Error')
@@ -260,13 +293,21 @@ class EventUsersListTest(LoginRequiredMixin, View):
              'search': 0,
              'sort': 1,
              'width': ''
-             }]
+             }
+        ]
 
+        # Для лидера группы показывать статус регистрации игорька и его комент. Для обычных - только зереных юзеров
+        if is_leader:
+            response['Columns'].append(
+                {'name': 'user_comment',
+                 'displayName': 'Комментарий пользователя',
+                 'search': 0,
+                 'sort': 0,
+                 'width': ''
+                 }
+            )
 
-        qs_json = json.dumps(response, cls=DjangoJSONEncoder)
-        return HttpResponse(qs_json, content_type='application/json')
-
-
+        return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder), content_type='application/json')
 
 # def test(request):
 #     return render(request, 'events/test_table_copy.html', {})

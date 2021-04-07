@@ -16,18 +16,13 @@
 
             <h2>Список участников</h2>
 
-            <!--
-            <li v-for="i in searchColumns">
-                {{ i }}
-            </li>
--->
             <div class="container py-sm-3">
-                <div class="col-sm-5">
+                <div class="col-md-5 col-sm-12">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-3">
                             <button class="btn btn-primary">Поиск</button>
                         </div>
-                        <div class="col-md">
+                        <div class="col">
                             <input v-model="searchQuery" class="form-control" type="text">
                         </div>
                     </div>
@@ -55,7 +50,7 @@
                         <tr v-for="row in columnsData">
                             <td v-for="header in columnsHeaders">
                                 {{ row[header.name] }}
-                                </td>
+                            </td>
                             <!--
                             <td>{{ user.user_name }}</td>
                             <td>{{ user.user_team_alias }}</td>

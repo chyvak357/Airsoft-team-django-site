@@ -12,9 +12,8 @@ urlpatterns = [
     path('event/register/<int:pk_event>/<int:pk_reg>/cancel', register_cancel, name='events_cancel'),  # Пока не используется
 
     # Для получения данных
-    path('event/<int:pk>/users-list', EventUsersListTest.as_view(), name='view_event_users_data'),  # Список пользователь на меро
+    path('event/<int:pk>/users-list', EventUsersListTest.as_view(), name='view_event_users_data')  # Список пользователь на меро
 
     # path('event/test', test, name='test_page'),
 
-    path('event/test2', test_vue, name='test_page2'),
 ]

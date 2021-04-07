@@ -61,9 +61,9 @@ let app = new Vue({
                 return tmpData.sort(function (d1, d2) {
                     let sort_field = sort.column.name;
                     if (sort.order > 0) {
-                        return (d1[sort_field].toLowerCase() > d2[sort_field].toLowerCase()) ? 1 : -1;
+                        return ((d1[sort_field] || '').toLowerCase() > (d2[sort_field] || '').toLowerCase()) ? 1 : -1;
                     } else {
-                        return (d1[sort_field].toLowerCase() < d2[sort_field].toLowerCase()) ? 1 : -1;
+                        return ((d1[sort_field] || '').toLowerCase() < (d2[sort_field] || '').toLowerCase()) ? 1 : -1;
                     }
                 });
             } else {
