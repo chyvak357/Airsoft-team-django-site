@@ -105,6 +105,7 @@ class Profile(models.Model):
     birth_date = models.DateField(null=True, blank=True)
 
     position = models.ForeignKey(UserPositions, on_delete=models.PROTECT, verbose_name='Должность', blank=True, null=True)
+    division = models.CharField(max_length=256, blank=True, null=True, verbose_name='Отделение')
 
     role = models.ForeignKey(UserRole, on_delete=models.PROTECT, verbose_name='Роль', null=True, blank=True)
     characteristic = models.TextField(blank=True, null=True, verbose_name='Характеристика')

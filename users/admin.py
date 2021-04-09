@@ -19,25 +19,25 @@ class UserPositionsAdmin(admin.ModelAdmin):
 
 
 class UserAwardsAdmin(admin.ModelAdmin):
-        list_display = ('id', 'name', 'description')
-        list_display_links = ('id', 'name')
-        search_fields = ('name',)
-        list_filter = ('name',)
+    list_display = ('id', 'name', 'description')
+    list_display_links = ('id', 'name')
+    search_fields = ('name',)
+    list_filter = ('name',)
 
 
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'display_username',
-                    'team_alias', 'phone',
+                    'team_alias', 'division','phone',
                     'birth_date',
                     'position', 'role',
                     'vk_link',
                     # 'last_online',
                     )
     list_display_links = ('id', 'user', 'team_alias')
-    search_fields = ('user', 'team_alias')
-    list_filter = ('user', 'role', 'position')
-
+    search_fields = ('user', 'team_alias', 'division')
+    list_filter = ('user', 'role', 'position', 'division')
+    list_editable = ('division',)
 
     def display_username(self, obj):
         name = 'ERROR'

@@ -23,6 +23,7 @@
                                 {% else %}
                                     <h5 class="user-name">{{ user.username }}</h5>
                                 {% endif %}
+                                {% if user.profile.division %}<h6 class="user-email">{{ user.profile.division }}</h6>{% endif %}
 
                                 {% if user.email %}<h6 class="user-email">{{ user.email }}</h6>{% endif %}
 
