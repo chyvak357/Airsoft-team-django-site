@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, reverse, render
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, View, TemplateView
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 
-from django.http import JsonResponse
-from django.core import serializers
+# from django.http import JsonResponse
+# from django.core import serializers
 
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -79,14 +79,47 @@ class ViewEvents(DetailView):
         event_registrations = UserEvent.objects.filter(event=event_obj)
         users_list = User.objects.filter(profile__events__in=event_registrations)
 
-        truants = User.objects.all().difference(users_list)
+        # TODO вызывает ошибку, тк не поддерживается MySQL
+        # truants = User.objects.all().difference(users_list)
+        truants = User.objects.all().exclude(id__in=users_list)
+        # qs1 = (Local.objects
+        #        .values_list('ref')
+        #        )
+        # qs2 = (Remote.objects
+        #        .filter()
+        #        .values_list('ref'))
+        #
+        # qs1.difference(qs1, qs2)
 
+        # check = Qs1.objects.all()
+        # prg = []
+        # [prg.append(x.ref) for x in check]
+        # difference = (Qs2.objects
+        #               .exclude(ref__in=prg)
+        #               .values()
+        #               )
+
+        # check = Qs1.objects.all()
+        # prg = []
+        # [prg.append(x.ref) for x in check]
+        # difference = (Qs2.objects.exclude(ref__in=prg).values())
+
+        #     obj, created = model.objects.filter(event_id=pk, user=request.user.profile).get_or_create(event_id=pk)
+
+        # TODO баг при нескольких вызовах подряд
         user_comment = "Автопрогул. Работа сервера"
         for user in truants:
-            tmp = UserEvent.objects.create(event=event_obj,
-                                           user_status=3,
-                                           user_comment=user_comment)
-            tmp.user.add(user.profile)
+            # tmp = UserEvent.objects.filter(event=event_obj, user=user.profile)
+            # print(tmp)
+
+            tmp, created = UserEvent.objects.filter(user=user.profile).get_or_create(event=event_obj,
+                                                                             user_status=3,
+                                                                             user_comment=user_comment)
+            if created:
+                tmp.user.add(user.profile)
+            # tmp = UserEvent.objects.create(event=event_obj,
+            #                                user_status=3,
+            #                                user_comment=user_comment)
 
 
 # https://coderoad.ru/47939283/django-CBV-generic-DetailView-redirect-%D0%B5%D1%81%D0%BB%D0%B8-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-%D0%BD%D0%B5-%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D1%83%D0%B5%D1%82
