@@ -51,7 +51,7 @@ let app = new Vue({
 
                     let tmp = []
                     for (let col of self.searchColumns){
-                        tmp.push(row[col].toLowerCase().indexOf(filter) !== -1);
+                        tmp.push((row[col] || '').toLowerCase().indexOf(filter) !== -1);
                     }
                     return tmp.some(elem => elem);
                 });
@@ -115,9 +115,34 @@ let app = new Vue({
             let self = this;
 
             // const event_reg = JSON.parse(document.getElementById('events_register_url').textContent);
-            console.log(document.getElementById('dataURL'))
             self.dataURL = JSON.parse(document.getElementById('dataURL').textContent);
             console.log(self.dataURL);
+                // + '?filter_patt=cancelTable';
+
+        },
+
+        /* Отменить посещение для игрока */
+        cancelVisit: function (user_row) {
+            let self = this;
+            // console.log(self.columnsDataROW['user_event_pk'=pk])
+            let reg_cancelURL = JSON.parse(document.getElementById('reg_cancelURL').textContent) + `?reg_id=${user_row.user_event_pk}`;
+            this.$http.get(reg_cancelURL)
+                .then(function (response) {
+                    if (response.data.stateside === 200){
+                        if (user_row.user_status_code === 0){
+                            user_row.visited = false;
+                            user_row.user_status_code = 4;
+                            user_row.user_status = 'Не явился';
+                        } else {
+                            user_row.visited = true;
+                            user_row.user_status_code = 0;
+                            user_row.user_status = 'Зарегистрировался';
+                        }
+                    } else {
+                        console.log(response.data.stateside)
+                        alert('Что-то пошло не так')
+                    }
+                });
         }
     }
 });

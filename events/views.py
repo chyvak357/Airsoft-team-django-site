@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, reverse, render
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, View
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, View, TemplateView
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 
@@ -149,39 +150,27 @@ def register_event(request, *args, **kwargs):
 
 
 # При отмене регистрации обьект с регистрацией не удаляется, а изменяется статус user_status на 1 или 2 (отказался)
-def register_cancel(request, *args, **kwargs):
-    user_comment = None
+@login_required
+def register_cancel_visit(request, *args, **kwargs):
+    """ Отмена/изменение регистрации на игру
+        pk_event ключ на событие, а в get параметрах передать id регистрации
+    """
+    response = {'stateside': 200}
 
-    if request.method == 'POST':
-        try:
-            user_comment = json.loads(request.body).get('user_comment', None)
-        except Exception as err:
-            user_comment = 'Server side error'
-
-    user_event = UserEvent.objects.get(pk=kwargs.get('pk_reg'))
-    user_event.user_status = 2  # отказался
-    user_event.user_comment = user_comment
-    user_event.save()
-    return redirect('view_events', pk=kwargs.get('pk_event'))
-
-
-# class EventUsersList(ListView):
-#     model = UserEvent
-#     template_name = 'events/users_on_event_static.html'
-#     # allow_empty = False
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#
-#         # Для генерации таблицы передаём количество столбцов и для каждоо ширину в процентах
-#         # context['columns_num'] = 4
-#         context['columns_data'] = (
-#             {'col_name': 'id', 'width': 5, 'obj_field': 'pk'},
-#             {'col_name': 'Название', 'width': 25, 'obj_field': 'name'},
-#             {'col_name': 'Описание', 'width': 50, 'obj_field': 'description'},
-#             {'col_name': 'Картинка', 'width': 20, 'obj_field': 'image'}
-#         )
-#         return context
+    pk_reg = request.GET.get('reg_id', None)
+    if pk_reg:
+        user_event = UserEvent.objects.get(pk=pk_reg)
+        if user_event.user_status == 0:
+            user_event.user_status = 4  # неявился
+            user_event.visited = False
+            user_event.user_comment = 'Неявка. Командир группы'
+            user_event.save()
+        else:
+            user_event.user_status = 0  # зарегистрировался
+            user_event.visited = True
+            user_event.user_comment = ''
+            user_event.save()
+    return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder), content_type='application/json')
 
 
 # Подходит для получения списка данных
@@ -212,38 +201,29 @@ def register_cancel(request, *args, **kwargs):
 #         context['event_pk'] = self.kwargs.get('pk')
 #         return context
 
+# http://127.0.0.1:8000/events/event/5/user-table?cancel_table=true
 
-class EventUsersList(ListView):
-    """ Таблица с теми, кто зарегался на игру"""
-    model = UserEvent
-    allow_empty = False  # кинет 404 при попытке отобразить пустой список
-    template_name = 'events/users_on_event_react.html'
-    extra_context = {}
+class EventUsersList(View):
+    """ Таблица пользователей связанных с мероприятием"""
 
-    #     Доп данные из context, но не оч использовать его
-    # Что бы получить данные, то нужно теперь в urls использовать
-    # AwardsTest.as_view()
+    context = {}
+    template_name = 'events/users_on_event.html'
+    extra_template_name = 'events/users_on_event_check.html'
+    cancel_table = False
 
-    # Изменяем запрос на получение данных
-    def get_queryset(self):
-        pk = self.kwargs.get('pk')
-        # Номер текущей игры
-        users_list = []
+    def get(self, request, *args, **kwargs):
+        # ожидаемый параметр, для открытия таблицы с возможностью подтверждать регистрацию
+        template_name = self.template_name if not request.GET.get('cancel_table', None) else self.extra_template_name
+        self.context['title'] = 'Список участников'
+        self.context['event_pk'] = self.kwargs.get('pk')
+        return render(request, template_name, self.context)
 
-        event_registrations = UserEvent.objects.filter(event_id=pk, user_status=0)
-        users_list = User.objects.filter(profile__events__in=event_registrations)
-        return users_list
-
-    # переопределилил метод для добавления данных контекста
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Просто пример чего-то там'
-        context['event_pk'] = self.kwargs.get('pk')
-        return context
 
 
 class EventUsersListTest(LoginRequiredMixin, View):
-    """ Тестовый контролер для полоучения табличных данных формата json """
+    """ Контролер для полоучения табличных данных формата json
+        работает со списком заререстрировавшихся на игру пользователей
+    """
     model = UserEvent
     user_statuses = dict((k, v) for k, v in model.USER_STATUSES)
 
@@ -252,19 +232,34 @@ class EventUsersListTest(LoginRequiredMixin, View):
         # pk - индекс мероприятия
         # data = self.model.objects.filter(event_id=pk)
         # user = auth.get_user(request)
+
+        request_filter = request.GET.get('filter_patt', None)  # будет набор заготовленных фильтров
+        # cancelTable - только те, что отметились, что едут на игру
+
         user_groups = request.user.groups.values_list('name', flat=True)
         is_leader = 'GroupLeaders' in user_groups
 
-        data = list(self.model.objects.filter(event_id=pk).values('user_status', 'user_comment', 'user__user',
+        qs_filter = {'event_id': pk}
+
+        if request_filter == 'cancelTable':
+            qs_filter['user_status__in'] = [0, 4]
+
+        # Для обычных бойцов показывать только тех, кто едет на игру
+        if not is_leader:
+            qs_filter['user_status'] = 0
+
+        data = list(self.model.objects.filter(**qs_filter).values('pk', 'user_status', 'user_comment', 'visited',
+                                                                  'user__user', 'user__team_alias',
                                                                   'user__user__first_name', 'user__user__last_name',
-                                                                  'user__team_alias'))
+                                                                  ))
 
         for row in data:
-            if not is_leader and row['user_status'] != 0:
-                continue
+            # if not is_leader and row['user_status'] != 0:
+            #     continue
             row['user_name'] = '{} {}'.format(row['user__user__last_name'], row[
                 'user__user__first_name'])  # qs_json = serializers.serialize('json', data)  # нельзя использовать, есл указывать какие поля нужно получить
             row['user_pk'] = row.pop('user__user')
+            row['user_event_pk'] = row.pop('pk')
             row['user_status_code'] = row['user_status']
             row['user_status'] = self.user_statuses.get(row['user_status'], 'Error')
             row['user_team_alias'] = row['user__team_alias']
@@ -296,8 +291,8 @@ class EventUsersListTest(LoginRequiredMixin, View):
              }
         ]
 
-        # Для лидера группы показывать статус регистрации игорька и его комент. Для обычных - только зереных юзеров
-        if is_leader:
+        # Для лидера группы показывать статус регистрации игрока и его комент
+        if is_leader and not request_filter == 'cancelTable':
             response['Columns'].append(
                 {'name': 'user_comment',
                  'displayName': 'Комментарий пользователя',

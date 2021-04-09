@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load event_users %}
+
+
+{% block content %}
+    {% url 'view_event_users_data' event_pk as dataURL %}
+    {% append_param dataURL filter_patt="cancelTable"  as dataURL%}
+    {{ dataURL|json_script:"dataURL" }}
+
+    {% url 'events_cancelVisit' event_pk as reg_cancelURL %}
+    {{ reg_cancelURL|json_script:"reg_cancelURL" }}
+
+    {% verbatim %}
+
+    <!-- Точка входа для отрисовки -->
+    <div class="container py-sm-3">
+        <div id="main-app">
+
+            <h2>Список участников</h2> <h4>Подтверждение присутствия</h4>
+
+            <div class="container py-sm-3">
+                <div class="col-md-5 col-sm-12">
+                    <div class="row">
+                        <div class="col-3">
+                            <button class="btn btn-primary">Поиск</button>
+                        </div>
+                        <div class="col">
+                            <input v-model="searchQuery" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="awards_table">
+                <div class="table table-responsive" style="overflow-x:hidden;">
+                    <table class="table mb-0">
+                        <thead>
+                        <tr>
+                            <th v-for="head in columnsHeaders" style="color: #0f74a8"
+                                @click="sortParam.column=head; sortParam.order=(sortParam.order * -1)"
+                                :class="{ active: sortParam.column == head }">
+
+                                {{ head.displayName }}
+                                <span class="arrow" :class="sortParam.order > 0 ? 'asc' : 'dsc'"></span>
+
+                            </th>
+                            <th style="color: #0f74a8">Действие</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr v-for="row in columnsData">
+                            <td v-for="header in columnsHeaders">
+                                {{ row[header.name] }}
+                            </td>
+                            <td>
+                                <div v-if="row['user_status_code'] === 0">
+                                    <button class="btn btn-secondary" style="background-color: #8d3131"
+                                            @click="cancelVisit(row);"
+                                    >Неявка
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <button class="btn btn-secondary" style="background-color: #4a8d31"
+                                            @click="cancelVisit(row);"
+                                    >Отметить
+                                    </button>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    {% endverbatim %}
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="{% static 'js/events/users_table.js' %}"></script>
+{% endblock %}
+
+

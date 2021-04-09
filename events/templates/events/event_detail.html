@@ -5,9 +5,7 @@
 {% block content %}
     {{ event_item.pk|json_script:"event_id" }}
     {% url 'events_register' event_item.pk as events_register_url %}
-    {% url 'events_cancel' event_item.pk user_event.pk as events_cancel_url %}
     {{ events_register_url|json_script:"events_register_url" }}
-    {{ events_cancel_url|json_script:"events_cancel_url" }}
 
     <div class="container py-sm-3">
         <div class="row justify-content-center text-light my-3">
@@ -107,6 +105,7 @@
                         {% get_event_users user event_item.pk as reg_users %}
                         {% if reg_users.count > 0 %}
                             <a href="{% url 'view_event_users' event_item.pk %}" target="_blank">Список игроков:</a>
+                            <a href="{% url 'view_event_users' event_item.pk %}?cancel_table=true" target="_blank">Подтвердить присутствие</a>
                             <div class="row py-2">
                                 <div class="col">
                                     <div class="row row-cols-3 text-center">

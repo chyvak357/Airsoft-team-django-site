@@ -28,3 +28,16 @@ def get_detail_userreg(user, event_id):
 @register.filter(name='cut', is_safe=True)
 def cut(value, arg):
     return value.replace(arg, '')
+
+
+@register.simple_tag()
+def append_param(url, start=True, **kwargs):
+    """ Добавление параметров в get запрос
+        start == True то, что параметров ещё нет
+    """
+    if start is True and len(kwargs) > 0:
+        url += '?'
+
+    for key, value in kwargs.items():
+        url += f'{key}={value}&'
+    return url
