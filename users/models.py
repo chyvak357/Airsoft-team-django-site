@@ -104,24 +104,22 @@ class Profile(models.Model):
     # TODO разобраться с формой для дня рождения
     birth_date = models.DateField(null=True, blank=True)
 
-    # TODO проверить работу поля position
     position = models.ForeignKey(UserPositions, on_delete=models.PROTECT, verbose_name='Должность', blank=True, null=True)
 
-    # TODO проверить работу поля role
     role = models.ForeignKey(UserRole, on_delete=models.PROTECT, verbose_name='Роль', null=True, blank=True)
     characteristic = models.TextField(blank=True, null=True, verbose_name='Характеристика')
 
-    # TODO проверить работу поля awards
     awards = models.ManyToManyField(UserAwards, blank=True)
+
+    reprimand = models.IntegerField(blank=True, default=0, verbose_name='Выговоры')
+    encouragement = models.IntegerField(blank=True, default=0, verbose_name='Поощерения')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Добавлен', null=True, blank=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', verbose_name='Фото', null=True, blank=True)
 
     # last_online = models.DateTimeField(blank=True, null=True)
 
-    # TODO проверить работу поля events
     events = models.ManyToManyField('events.UserEvent', blank=True, related_name='user')
-
 
     class Meta:
         verbose_name = 'Профиль'

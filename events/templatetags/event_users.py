@@ -41,3 +41,9 @@ def append_param(url, start=True, **kwargs):
     for key, value in kwargs.items():
         url += f'{key}={value}&'
     return url
+
+
+@register.filter(name='has_group')
+def has_group(user, group_name):
+    """ Проверка на наличие группы у пользователя"""
+    return user.groups.filter(name=group_name).exists()

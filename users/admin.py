@@ -27,7 +27,7 @@ class UserAwardsAdmin(admin.ModelAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user',
+    list_display = ('id', 'user', 'display_username',
                     'team_alias', 'phone',
                     'birth_date',
                     'position', 'role',
@@ -37,6 +37,16 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'user', 'team_alias')
     search_fields = ('user', 'team_alias')
     list_filter = ('user', 'role', 'position')
+
+
+    def display_username(self, obj):
+        name = 'ERROR'
+        try:
+            name = f'{obj.user.last_name} {obj.user.first_name}'
+        except Exception:
+            pass
+        return name
+
 
 
 admin.site.register(Profile, ProfileAdmin)

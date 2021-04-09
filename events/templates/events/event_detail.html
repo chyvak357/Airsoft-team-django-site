@@ -7,6 +7,16 @@
     {% url 'events_register' event_item.pk as events_register_url %}
     {{ events_register_url|json_script:"events_register_url" }}
 
+{#    <div class="row py-2">#}
+{#        <a href="{% url 'view_event_users' event_item.pk %}?cancel_table=true"#}
+{#           class="btn btn-primary stretched-link"#}
+{#           style="width: 100%;"#}
+{#        >#}
+{#            Подтвердить присутсвие#}
+{#        </a>#}
+{#    </div>#}
+
+
     <div class="container py-sm-3">
         <div class="row justify-content-center text-light my-3">
             <div class="col-md-10 bg-dark my-2 ">
@@ -47,17 +57,28 @@
                         <div class="row py-2">
 
 
-
                             {% comment %} Блок с кнопкой регистрации на игру  {% endcomment %}
                             <div class="col">
 
 
-                                {% if  event_item.reg_is_over or event_item.event_is_over %}
+                                {% if event_item.reg_is_over or event_item.event_is_over %}
 
-                                    <div class="reg-closed btn stretched-link "
-                                         style="width: 100%;">
-                                        Регистрация завершена
+                                    <div class="py-2">
+                                        <div class="reg-closed btn"
+                                             style="width: 100%;">
+                                            Регистрация завершена
+                                        </div>
                                     </div>
+
+                                    {% comment %} После меро можно отметить присутсвующих  {% endcomment %}
+                                    {% if request.user|has_group:"GroupLeaders" %}
+                                        <div class="py-2">
+                                            <button class="btn btn-primary" style="width: 100%;"
+                                                    onclick="window.open(`{% url 'view_event_users' event_item.pk %}?cancel_table=true`, `_blank`)">
+                                                Подтвердить присутсвие
+                                            </button>
+                                        </div>
+                                    {% endif %}
 
                                 {% else %}
                                     {% if request.user.is_authenticated %}
@@ -105,7 +126,6 @@
                         {% get_event_users user event_item.pk as reg_users %}
                         {% if reg_users.count > 0 %}
                             <a href="{% url 'view_event_users' event_item.pk %}" target="_blank">Список игроков:</a>
-                            <a href="{% url 'view_event_users' event_item.pk %}?cancel_table=true" target="_blank">Подтвердить присутствие</a>
                             <div class="row py-2">
                                 <div class="col">
                                     <div class="row row-cols-3 text-center">
