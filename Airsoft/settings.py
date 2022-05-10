@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['192.168.0.101', '127.0.0.1']
 
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,10 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'news.apps.NewsConfig',
     'events.apps.EventsConfig',
+    'django_filters',
+    # 'ui.apps.UiConfig',
+    'api.apps.ApiConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -80,6 +85,15 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 
 WSGI_APPLICATION = 'Airsoft.wsgi.application'
 
@@ -141,7 +155,7 @@ STATIC_URL = '/static/'
 
 # Хранит путь к папке, в которой собрана статика после collectstatic
 # Использовать при деплои приложения на сервер
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Список путей к доп файлам со статикой. По ним сборщик пробегает, что бы собрать статику
 #  Потом нужно будет прописать все ппути
@@ -150,7 +164,7 @@ STATICFILES_DIRS = [
 ]
 
 
-#
+
 # if DEBUG:
 #     STATICFILES_DIRS = [
 #         os.path.join(BASE_DIR, 'static')
@@ -161,3 +175,35 @@ STATICFILES_DIRS = [
 INTERNAL_IPS = ['127.0.0.1']
 
 LOGIN_URL = '/users/login'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(name)-12s %(levelname)-8s %(message)s'
+        },
+        'file': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': 'debug.log'
+        }
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file']
+        }
+    }
+}

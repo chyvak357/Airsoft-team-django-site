@@ -1,9 +1,13 @@
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, View, TemplateView
 # from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from os.path import join as osjoin, exists
+from os import getcwd
 
 # from django.http import JsonResponse
 # from django.core import serializers
@@ -16,6 +20,7 @@ from users.models import User
 
 
 # from django.contrib.auth.forms import UserCreationForm если бы не юзали свою форму
+CONF_FILE = osjoin(getcwd(), f'events\\files\\tables.json')
 
 
 class HomeEvents(ListView, LoginRequiredMixin):
@@ -339,3 +344,77 @@ class EventUsersListTest(LoginRequiredMixin, View):
 
 # def test(request):
 #     return render(request, 'events/test_table_copy.html', {})
+
+
+# относится к модулю отображения таблиц
+class AllowList(APIView):
+    """ Получение данных по таблицам, которые можно отображать
+
+    Конфиг содержится в files/tables.json
+    """
+
+    def get(self, request):
+        query_params = request.query_params
+        target = query_params.get('object', None)
+        tables_conf = get_config()
+
+        if not tables_conf:
+            Response("Error: config file not found", status=510)
+
+        if target is not None and target != 'all':
+            for t in tables_conf:
+                if t.get('name', None) == target:
+                    tables_conf = t
+                    break
+        return Response(tables_conf, status=200)
+
+
+class GetData(APIView):
+    """ Получение данных для таблицы по запросам с веба
+
+    """
+    def get(self, request):
+        """target its table name"""
+        q_params = request.query_params
+        columns = get_list(q_params.get('columns', None))
+        DATA = {}
+
+        target = get_list(q_params.get('target', None))
+        if len(target) > 1:
+            tmp = "D_ORG Inner JOIN MAIN_VALUES ON MAIN_VALUES.orgID=D_ORG.idORG"
+        target = target if type(target) is not list else target[0]
+
+
+        WHERE = ""
+        _filter = q_params.get('filter', default="")
+        if _filter:
+            _filter = json.loads(_filter)
+            _filtered, DATA = LoapOptionFilterParser(_filter).parse_filter()
+            WHERE = "WHERE " + _filtered
+        tables_conf = get_config()
+        response = []
+
+        if not tables_conf:
+            Response("Error: config file not found", status=510)
+
+        with connection.cursor() as cursor:
+            if columns is None:
+                cursor.execute(f'''SELECT * FROM {target}''', DATA)
+                response = dictFetchall(cursor)
+            else:
+                # columns = get_list(columns)
+                columns = check_allowed_col(columns, target, tables_conf)
+                query = 'SELECT {}, (SELECT count(valueval) FROM {}) row_count FROM {} {};'.format(', '.join(columns),
+                                                                                                   target, target,
+                                                                                                   WHERE)
+                # cursor.execute(f'''SELECT {', '.join(columns)} FROM {target} {WHERE}''')
+                cursor.execute(query, DATA)
+                response = dictFetchall(cursor)
+        return Response(response)
+
+
+def get_config(filepath=CONF_FILE):
+    if exists(CONF_FILE):
+        with open(CONF_FILE, encoding="utf_8_sig") as f:
+            return json.load(f)
+    return []

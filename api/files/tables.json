@@ -1,0 +1,62 @@
+[
+  {
+    "name": "D_ORG",
+    "alias": "Предприятия",
+    "pk": "idORG",
+    "columns": [
+      {
+        "name": "nameorg",
+        "dataType": "char",
+        "alias": "Организация"
+      },
+      {
+        "name": "short_nameorg",
+        "dataType": "char",
+        "alias": "Сокращение"
+      },
+      {
+        "name": "innorg",
+        "dataType": "char",
+        "alias": "ИНН"
+      },
+      {
+        "name": "ogrnorg",
+        "dataType": "char",
+        "alias": "ОГРН"
+      }
+    ]
+  },
+  {
+    "name": "MAIN_VALUES",
+    "alias": "Данные",
+    "pk": "idVAL",
+    "liks": {
+      "D_ORG": {
+        "localKey": "orgID",
+        "extKey": "idORG"
+      }
+    },
+    "columns": [
+      {
+        "name": "value_nameval",
+        "dataType": "char",
+        "alias": "Показатель"
+      },
+      {
+        "name": "valueval",
+        "dataType": "char",
+        "alias": "Значение"
+      },
+      {
+        "name": "dateval",
+        "dataType": "char",
+        "alias": "Дата"
+      },
+      {
+        "name": "value_measureval",
+        "dataType": "char",
+        "alias": "Измерение"
+      }
+    ]
+  }
+]

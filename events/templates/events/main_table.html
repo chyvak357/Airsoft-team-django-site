@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    {#    {% url 'view_event_users_data' event_pk as dataURL %}#}
+    {#    {{ dataURL|json_script:"dataURL" }}#}
+
+    {% verbatim %}
+
+    <!-- Точка входа для отрисовки -->
+    <div class="container py-sm-3">
+
+        <div id="main-app">
+
+            <h2>Список участников</h2>
+
+            <div class="container py-sm-3">
+                <div class="col-md-5 col-sm-12">
+                    <div class="row">
+                        <div class="col-3">
+                            <button class="btn btn-primary">Поиск</button>
+                        </div>
+                        <div class="col">
+                            <input v-model="searchQuery" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                    <div v-for="table in allowedSources"
+                         class="mr-1 list-group"
+                    >
+                        <h5>{{ table.alias }}</h5>
+
+                        <div v-for="col in table.columns"
+                        >
+                            <label class="list-group-item m-0 border-bottom-0 pl-5">
+                                <input class="form-check-input me-1" type="checkbox"
+                                       :value=col
+                                v-model="selectedColumns">
+                                {{ col.alias }}
+                            </label>
+                        </div>
+                    </div>
+            </div>
+<span>Отмеченные колонки: {{ selectedColumns }}</span>
+            <br>
+<button type="button" class="btn btn-primary" v-on:click="buildTable" >Получить таблицу</button>
+
+
+            <div class="awards_table">
+                <div class="table table-responsive" style="overflow-x:hidden;">
+                    <table class="table mb-0">
+                        <thead>
+                        <tr>
+                            <th v-for="head in selectedColumns" style="color: #0f74a8">
+                                {{ head.alias }}
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr v-for="row in columnsData">
+
+                            <td v-for="header in selectedColumns">
+                                {{ row[header.name] }}
+                            </td>
+                            <!--
+                            <td>{{ row.valueval }}</td>
+                            -->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    {% endverbatim %}
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="{% static 'js/ui/users_table.js' %}"></script>
+{% endblock %}
+
+

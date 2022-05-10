@@ -1,5 +1,6 @@
 .idea
 venv
+.venv
 __pycache__
 /static/
 Не для импорта
@@ -11,3 +12,4 @@ test_dump.json
 airsoft_update.bat
 airsoft_ssh.bat
 call_airsoft_ssh.vbs
+debug.log
