@@ -7,6 +7,11 @@ let app = new Vue({
         sortParam: {column: '', order: 1},  // 1 - ASC, -1 - DSC
         searchQuery: '',
 
+        searchQuery: '',                    // Строка в поле для поиска
+        selectedColumns: [],
+        dataQuery: "",
+        allowedSources: [],                 // TODO  api/allowlist
+
         /* Данные о столбцах приходят от сервера. Поле "Columns" */
         columnsHeaders: [],
         // columnsHeaders: [
@@ -32,6 +37,7 @@ let app = new Vue({
     created: function () {
         this.getDataURL();
         this.fetchData();
+        // this.fetchConfig();
     },
 
     computed: {
@@ -44,10 +50,6 @@ let app = new Vue({
             /* Фильтрация для заданных полей (унифицировать) */
             if (filter) {
                 return tmpData.filter(function (row) {
-
-                    // let byName = row.user_name.indexOf(self.searchQuery) !== -1;
-                    // let byAlias = row.user_team_alias.indexOf(self.searchQuery) !== -1;
-                    // return byName || byAlias;
 
                     let tmp = []
                     for (let col of self.searchColumns){
@@ -99,6 +101,32 @@ let app = new Vue({
     },
 
     methods: {
+        /* Составление запроса по выбранным полям */
+        buildQuery: function () {
+            let self = this;
+
+            let columns = "&columns=["
+            self.selectedColumns.forEach((item, index, array) => {
+                columns += `"${item.name}",`
+            });
+            columns = columns.slice(0, -1)
+            columns += "]"
+            self.dataQuery += columns
+        },
+
+        buildTable: function (event) {
+            let self = this;
+            self.dataQuery = ''
+            self.buildQuery()
+
+            console.log(self.dataURL + '?target="MAIN_VALUES"' + self.dataQuery)
+
+            this.$http.get(self.dataURL + '?target="MAIN_VALUES"' + self.dataQuery)
+                .then(function (response) {
+                    self.columnsDataROW = response.data;
+                });
+        },
+
         /* Получение данных с сервера */
         fetchData: function () {
             let self = this;
@@ -110,6 +138,17 @@ let app = new Vue({
                 });
         },
 
+        // fetchConfig: function () {
+        //     let self = this;
+        //     this.$http.get(self.configURL)
+        //         .then(function (response) {
+        //             console.log(response.data)
+        //             // self.allowedSources = response.data // TODO right module
+        //             // self.columnsDataROW = response.data.Data;
+        //             self.columnsHeaders = response.data.Columns;
+        //         });
+        // },
+        
         /* Получение ссылки из шаблона на данные */
         getDataURL: function (){
             let self = this;
@@ -118,13 +157,16 @@ let app = new Vue({
             self.dataURL = JSON.parse(document.getElementById('dataURL').textContent);
             console.log(self.dataURL);
                 // + '?filter_patt=cancelTable';
+            // self.configURL = "http://127.0.0.1:8000/api/allowlist"
+            // self.dataURL = "http://127.0.0.1:8000/api/data"
+            // console.log(self.configURL);
+            // console.log(self.dataURL);
 
         },
 
         /* Отменить посещение для игрока */
         cancelVisit: function (user_row) {
             let self = this;
-            // console.log(self.columnsDataROW['user_event_pk'=pk])
             let reg_cancelURL = JSON.parse(document.getElementById('reg_cancelURL').textContent) + `?reg_id=${user_row.user_event_pk}`;
             this.$http.get(reg_cancelURL)
                 .then(function (response) {

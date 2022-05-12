@@ -1,0 +1,37 @@
+[
+  {
+    "name": "USERS",
+    "alias": "Пользователи на игре",
+    "pk": "id",
+    "columns": [
+      {
+        "name": "user_name",
+        "dataType": "char",
+        "alias": "Пользователь",
+        "search": 1,
+        "sort": 1
+      },
+      {
+        "name": "user_team_alias",
+        "dataType": "char",
+        "alias": "Позывной",
+        "search": 1,
+        "sort": 1
+      },
+      {
+        "name": "user_status",
+        "dataType": "char",
+        "alias": "Статус регистрации",
+        "search": 1,
+        "sort": 1
+      },
+      {
+        "name": "user_comment",
+        "dataType": "char",
+        "alias": "Комментарий пользователя",
+        "search": 1,
+        "sort": 1
+      }
+    ]
+  }
+]

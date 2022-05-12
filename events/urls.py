@@ -12,8 +12,8 @@ urlpatterns = [
     path('event/register/<int:pk_event>/cancel', register_cancel_visit, name='events_cancelVisit'),  # Отметить неявку на игру. В get должен быть id пользователя
 
     # Для получения данных
-    path('event/<int:pk>/users-list', EventUsersListTest.as_view(), name='view_event_users_data')  # Список пользователь на меро
+    path('event/<int:pk>/users-list', EventUsersListTest.as_view(), name='view_event_users_data'),  # Список пользователь на меро
 
-    # path('event/test', test, name='test_page'),
-
+    # path('event/register/allowlist', AllowList.as_view(), name='api_allowList'),
+    # path('event/register/data', GetData.as_view(), name='api_getdata')
 ]
