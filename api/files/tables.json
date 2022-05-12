@@ -1,61 +1,36 @@
 [
   {
-    "name": "D_ORG",
-    "alias": "Предприятия",
-    "pk": "idORG",
+    "name": "USERS",
+    "alias": "Пользователи на игре",
+    "pk": "id",
     "columns": [
       {
-        "name": "nameorg",
+        "name": "user_name",
         "dataType": "char",
-        "alias": "Организация"
+        "alias": "Пользователь",
+        "search": 1,
+        "sort": 1
       },
       {
-        "name": "short_nameorg",
+        "name": "user_team_alias",
         "dataType": "char",
-        "alias": "Сокращение"
+        "alias": "Позывной",
+        "search": 1,
+        "sort": 1
       },
       {
-        "name": "innorg",
+        "name": "user_status",
         "dataType": "char",
-        "alias": "ИНН"
+        "alias": "Статус регистрации",
+        "search": 1,
+        "sort": 1
       },
       {
-        "name": "ogrnorg",
+        "name": "user_comment",
         "dataType": "char",
-        "alias": "ОГРН"
-      }
-    ]
-  },
-  {
-    "name": "MAIN_VALUES",
-    "alias": "Данные",
-    "pk": "idVAL",
-    "liks": {
-      "D_ORG": {
-        "localKey": "orgID",
-        "extKey": "idORG"
-      }
-    },
-    "columns": [
-      {
-        "name": "value_nameval",
-        "dataType": "char",
-        "alias": "Показатель"
-      },
-      {
-        "name": "valueval",
-        "dataType": "char",
-        "alias": "Значение"
-      },
-      {
-        "name": "dateval",
-        "dataType": "char",
-        "alias": "Дата"
-      },
-      {
-        "name": "value_measureval",
-        "dataType": "char",
-        "alias": "Измерение"
+        "alias": "Комментарий пользователя",
+        "search": 1,
+        "sort": 1
       }
     ]
   }

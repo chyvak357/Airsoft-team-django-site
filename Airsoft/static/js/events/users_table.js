@@ -37,7 +37,7 @@ let app = new Vue({
     created: function () {
         this.getDataURL();
         this.fetchData();
-        this.fetchConfig();
+        // this.fetchConfig();
     },
 
     computed: {
@@ -50,10 +50,6 @@ let app = new Vue({
             /* Фильтрация для заданных полей (унифицировать) */
             if (filter) {
                 return tmpData.filter(function (row) {
-
-                    // let byName = row.user_name.indexOf(self.searchQuery) !== -1;
-                    // let byAlias = row.user_team_alias.indexOf(self.searchQuery) !== -1;
-                    // return byName || byAlias;
 
                     let tmp = []
                     for (let col of self.searchColumns){
@@ -109,14 +105,6 @@ let app = new Vue({
         buildQuery: function () {
             let self = this;
 
-            // let columns = self.selectedColumns.map()
-            // let tmp = self.selectedColumns.map(item => item.name);
-            // console.log(tmp)
-            // tmp.forEach((item, index, array) => {
-            //     `"${item}"`
-            // });
-            // console.log(tmp)
-
             let columns = "&columns=["
             self.selectedColumns.forEach((item, index, array) => {
                 columns += `"${item.name}",`
@@ -133,10 +121,7 @@ let app = new Vue({
 
             console.log(self.dataURL + '?target="MAIN_VALUES"' + self.dataQuery)
 
-            //    MAIN_VALUES/?columns=["valueval","value_measureval","d2ateval"]&filter=[["valueval",">","1991000"],"or",["value_measureval","=","twsdf"]]
-            // this.$http.get(self.dataURL + 'MAIN_VALUES/?columns=["valueval","value_measureval","d2ateval"]&filter=[["valueval","<","5000"],"or",["value_measureval","=","twsdf"]]')
             this.$http.get(self.dataURL + '?target="MAIN_VALUES"' + self.dataQuery)
-            // this.$http.get(self.dataURL + '?target="MAIN_VALUES"&columns=["valueval","value_measureval","d2ateval"]&filter=[["valueval",">","1991000"],"or",["value_measureval","=","twsdf"]]')
                 .then(function (response) {
                     self.columnsDataROW = response.data;
                 });
@@ -153,16 +138,16 @@ let app = new Vue({
                 });
         },
 
-        fetchConfig: function () {
-            let self = this;
-            this.$http.get(self.configURL)
-                .then(function (response) {
-                    console.log(response.data)
-                    self.allowedSources = response.data
-                    // self.columnsDataROW = response.data.Data;
-                    // self.columnsHeaders = response.data.Columns;
-                });
-        },
+        // fetchConfig: function () {
+        //     let self = this;
+        //     this.$http.get(self.configURL)
+        //         .then(function (response) {
+        //             console.log(response.data)
+        //             // self.allowedSources = response.data // TODO right module
+        //             // self.columnsDataROW = response.data.Data;
+        //             self.columnsHeaders = response.data.Columns;
+        //         });
+        // },
         
         /* Получение ссылки из шаблона на данные */
         getDataURL: function (){
@@ -172,17 +157,16 @@ let app = new Vue({
             self.dataURL = JSON.parse(document.getElementById('dataURL').textContent);
             console.log(self.dataURL);
                 // + '?filter_patt=cancelTable';
-            self.configURL = "http://127.0.0.1:8000/api/allowlist"
-            self.dataURL = "http://127.0.0.1:8000/api/data"
-            console.log(self.configURL);
-            console.log(self.dataURL);
+            // self.configURL = "http://127.0.0.1:8000/api/allowlist"
+            // self.dataURL = "http://127.0.0.1:8000/api/data"
+            // console.log(self.configURL);
+            // console.log(self.dataURL);
 
         },
 
         /* Отменить посещение для игрока */
         cancelVisit: function (user_row) {
             let self = this;
-            // console.log(self.columnsDataROW['user_event_pk'=pk])
             let reg_cancelURL = JSON.parse(document.getElementById('reg_cancelURL').textContent) + `?reg_id=${user_row.user_event_pk}`;
             this.$http.get(reg_cancelURL)
                 .then(function (response) {
