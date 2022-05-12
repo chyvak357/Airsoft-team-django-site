@@ -100,16 +100,20 @@ class ViewEvents(DetailView):
         # TODO вызывает ошибку, тк не поддерживается MySQL
         # truants = User.objects.all().difference(users_list)
         truants = User.objects.all().exclude(id__in=users_list)
-        
+
         # TODO баг при нескольких вызовах подряд
         user_comment = "Автопрогул. Работа сервера"
         for user in truants:
-            tmp, created = UserEvent.objects.filter(user=user.profile).get_or_create(
-                event=event_obj, user_status=3, user_comment=user_comment
-            )
-            if created:
-                tmp.user.add(user.profile)
-
+            try:
+                tmp, created = UserEvent.objects.filter(
+                    user=user.profile
+                ).get_or_create(
+                    event=event_obj, user_status=3, user_comment=user_comment
+                )
+                if created:
+                    tmp.user.add(user.profile)
+            except Exception as err:
+                pass
 
 
 def register_event(request, *args, **kwargs):
